@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hacker_news_clone/data/services/api_network.dart';
 import 'package:http/http.dart' as http;
 //My imports
+import 'package:hacker_news_clone/data/services/api_network.dart';
 import 'package:hacker_news_clone/data/models/story.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -13,38 +13,44 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final List<int> _ids = <int>[
-    9129911,
-    9129199,
-    9127761,
-    9128141,
-    9128264,
-    9127792,
-    9129248,
-  ];
+  List<int> _ids = <int>[];
+  List<Story?> _stories = <Story>[];
+
+  @override
+  void initState() {
+    ApiNetworkHelper()
+        .getBestStories(http.Client())
+        .then((List<int> value) async {
+      List<Story?> listOfStories = await Future.wait(_ids.map((int id) {
+        return ApiNetworkHelper().getStory(http.Client(), id);
+      }).toList());
+      setState(() {
+        _ids = value;
+        _stories = listOfStories;
+      });
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final List<Story> bestStories = <Story>[];
+    _stories.forEach((Story? story) {
+      if (story != null) {
+        bestStories.add(story);
+      }
+    });
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
           title: const Text('Hacker News Clone'),
         ),
-        body: ListView(
-          children: _ids
-              .map((int i) => FutureBuilder<Story?>(
-                    future: ApiNetworkHelper().getStory(http.Client(), i),
-                    builder:
-                        (BuildContext context, AsyncSnapshot<Story?> snapshot) {
-                      if (snapshot.connectionState == ConnectionState.done) {
-                        return _buildItem(snapshot.data!);
-                      } else {
-                        return const Center(child: CircularProgressIndicator());
-                      }
-                    },
-                  ))
-              .toList(),
-        ));
+        body: bestStories.isNotEmpty
+            ? ListView(
+                children: bestStories
+                    .map((Story story) => _buildItem(story))
+                    .toList())
+            : Center(child: const CircularProgressIndicator()));
   }
 
   Widget _buildItem(Story story) {

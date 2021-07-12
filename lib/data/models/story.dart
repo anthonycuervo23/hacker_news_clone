@@ -63,5 +63,16 @@ abstract class Story implements Built<Story, StoryBuilder> {
     return serializers.deserializeWith(Story.serializer, parsed);
   }
 
+  static List<int> parseStoriesId(String jsonString) {
+    final dynamic parsed = jsonDecode(jsonString);
+    if (parsed is Iterable && parsed != null) {
+      final List<int> listOfIds =
+          List<int>.from(parsed).getRange(0, 10).toList();
+      return listOfIds;
+    }
+
+    return [];
+  }
+
   static Serializer<Story> get serializer => _$storySerializer;
 }
