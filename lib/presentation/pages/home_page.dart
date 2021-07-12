@@ -13,19 +13,18 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<int> _ids = <int>[];
+  List<int> _bestStoriesIds = <int>[];
   List<Story?> _stories = <Story>[];
+  final ApiNetworkHelper apiNetwork = ApiNetworkHelper(http.Client());
 
   @override
   void initState() {
-    ApiNetworkHelper()
-        .getBestStories(http.Client())
-        .then((List<int> value) async {
-      List<Story?> listOfStories = await Future.wait(_ids.map((int id) {
-        return ApiNetworkHelper().getStory(http.Client(), id);
-      }).toList());
+    apiNetwork.getBestStories().then((List<int> bestStoriesIds) async {
+      final List<Story?> listOfStories = await Future.wait(bestStoriesIds
+          .map((int id) async => apiNetwork.getStory(id)).toList());
+
       setState(() {
-        _ids = value;
+        _bestStoriesIds = bestStoriesIds;
         _stories = listOfStories;
       });
     });
@@ -35,11 +34,13 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final List<Story> bestStories = <Story>[];
-    _stories.forEach((Story? story) {
+
+    for(final Story? story in _stories) {
       if (story != null) {
         bestStories.add(story);
       }
-    });
+    }
+
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
@@ -47,10 +48,10 @@ class _HomePageState extends State<HomePage> {
         ),
         body: bestStories.isNotEmpty
             ? ListView(
-                children: bestStories
-                    .map((Story story) => _buildItem(story))
-                    .toList())
-            : Center(child: const CircularProgressIndicator()));
+            children: bestStories
+                .map((Story story) => _buildItem(story))
+                .toList())
+            : const Center(child: CircularProgressIndicator()));
   }
 
   Widget _buildItem(Story story) {

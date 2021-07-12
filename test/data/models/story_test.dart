@@ -24,7 +24,7 @@ void main() {
     when(client.get(Uri.parse(url)))
         .thenAnswer((_) async => http.Response(jsonString, 200));
     expect(
-        await ApiNetworkHelper().getStory(http.Client(), 8863), isA<Story>());
+        await ApiNetworkHelper(http.Client()).getStory(8863), isA<Story>());
     expect(Story.fromJson(jsonString)!.by, 'dhouston');
     expect(Story.fromJson(jsonString)!.id, 8863);
   });
