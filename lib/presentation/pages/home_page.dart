@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hacker_news_clone/data/services/api_network.dart';
 import 'package:http/http.dart' as http;
 //My imports
 import 'package:hacker_news_clone/data/models/story.dart';
@@ -22,14 +23,6 @@ class _HomePageState extends State<HomePage> {
     9129248,
   ];
 
-  Future<Story?> _getStory(int id) async {
-    final String url = 'https://hacker-news.firebaseio.com/v0/item/$id.json';
-    final http.Response response = await http.get(Uri.parse(url));
-    if (response.statusCode == 200) {
-      return Story.fromJson(response.body);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,7 +33,7 @@ class _HomePageState extends State<HomePage> {
         body: ListView(
           children: _ids
               .map((int i) => FutureBuilder<Story?>(
-                    future: _getStory(i),
+                    future: ApiNetworkHelper().getStory(http.Client(), i),
                     builder:
                         (BuildContext context, AsyncSnapshot<Story?> snapshot) {
                       if (snapshot.connectionState == ConnectionState.done) {
