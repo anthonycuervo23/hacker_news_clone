@@ -66,8 +66,7 @@ abstract class Story implements Built<Story, StoryBuilder> {
   static List<int> parseStoriesId(String jsonString) {
     final dynamic parsed = jsonDecode(jsonString);
     if (parsed is Iterable && parsed != null) {
-      final List<int> listOfIds =
-          List<int>.from(parsed).getRange(0, 10).toList();
+      final List<int> listOfIds = List<int>.from(parsed).take(10).toList();
       return listOfIds;
     }
 
