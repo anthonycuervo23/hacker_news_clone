@@ -20,15 +20,6 @@ class ApiNetworkHelper {
     }
   }
 
-  // Future<List<int>> getBestStories() async {
-  //   const String url = 'https://hacker-news.firebaseio.com/v0/beststories.json';
-  //   final http.Response response = await httpClient.get(Uri.parse(url));
-  //   if (response.statusCode == 200) {
-  //     return Story.parseStoriesId(response.body);
-  //   }
-  //   return <int>[];
-  // }
-
   Future<List<int>> getIds(StoriesType? type) async {
     final String partUrl =
         type == StoriesType.topStories ? 'topstories' : 'newstories';
