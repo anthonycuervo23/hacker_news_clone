@@ -17,8 +17,9 @@ dependencies:
   built_collection: ^5.1.0
   http: ^0.13.3
   url_launcher: ^6.0.9
+  flutter_bloc: ^7.0.1
+  webview_flutter: ^2.0.10
 
-  
 dev_dependencies:
   mockito: ^5.0.7
   build_runner: ^1.0.0

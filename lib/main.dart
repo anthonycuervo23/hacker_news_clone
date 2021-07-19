@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hacker_news_clone/data/services/api_repository.dart';
 import 'package:hacker_news_clone/presentation/pages/home_page.dart';
 
 void main() {
@@ -10,8 +12,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: HomePage(),
+    return RepositoryProvider<Repository>(
+      create: (_) => Repository(),
+      child: MaterialApp(
+        home: const HomePage(),
+        theme: ThemeData(
+            primaryColor: const Color(0xFF212121),
+            scaffoldBackgroundColor: const Color(0xFF212121)),
+      ),
     );
   }
 }
