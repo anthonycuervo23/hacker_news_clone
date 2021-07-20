@@ -69,7 +69,7 @@ class InfoWithButtons extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             Container(
-              width: story!.descendants! == 0
+              width: story!.descendants == 0
                   ? 50
                   : story!.descendants!.toDouble() > 99
                       ? (story!.descendants!.toDouble() > 999 ? 95 : 85)

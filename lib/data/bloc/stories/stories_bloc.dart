@@ -5,6 +5,7 @@ import 'package:hacker_news_clone/data/enum/hacker_news_enum.dart';
 import 'package:hacker_news_clone/data/models/story.dart';
 import 'package:hacker_news_clone/data/services/api_repository.dart';
 import 'package:meta/meta.dart';
+import 'package:http/http.dart' as http;
 
 part 'stories_event.dart';
 part 'stories_state.dart';
@@ -18,33 +19,38 @@ class StoriesBloc extends Bloc<StoriesEvent, StoriesState> {
   Stream<StoriesState> mapEventToState(
     StoriesEvent event,
   ) async* {
-    if (event is OnGetNewStories) {
+    if (event is OnGetStories) {
+      final List<Story> filteredStories = <Story>[];
       yield state.copyWith(status: NewsStatus.loading);
-      final List<int> id = await repo.fetchBestIDs(StoriesType.newStories);
-      if (id.isEmpty) {
+      final List<Story?> stories = await repo.getStories(state.type, 30);
+      if (stories.isEmpty) {
         yield state.copyWith(
             status: NewsStatus.error,
             message: 'Could not get stories, please try again');
       } else {
-        yield state.copyWith(status: NewsStatus.loaded, ids: id);
-      }
-    }
-    if (event is OnGetTopStories) {
-      yield state.copyWith(status: NewsStatus.loading);
-      final List<int> id = await repo.fetchBestIDs(StoriesType.topStories);
-      if (id.isEmpty) {
+        // for (final Story? story in stories) {
+        //   if (story!.type != 'story') {
+        //     return;
+        //   }
+        //   filteredStories.add(story);
+        // }
+        stories.forEach((Story? story) {
+          if (story!.type != 'story') {
+            return;
+          }
+          filteredStories.add(story);
+        });
         yield state.copyWith(
-            status: NewsStatus.error,
-            message: 'Could not get stories, please try again');
-      } else {
-        yield state.copyWith(status: NewsStatus.loaded, ids: id);
+          stories: filteredStories,
+          status: NewsStatus.loaded,
+        );
       }
     }
-    // if (event is OnSelectedTab) {
-    //   yield state.copyWith(type: event.type);
-    // }
-    if (event is OnRefresh) {
-      // for database
+    if (event is OnSelectedTab) {
+      yield state.copyWith(
+        type: event.type,
+        storiesName: event.storiesName,
+      );
     }
   }
 

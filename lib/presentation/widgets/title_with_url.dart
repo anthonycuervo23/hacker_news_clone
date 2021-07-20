@@ -28,7 +28,7 @@ class TitleWithUrl extends StatelessWidget {
             height: 10,
           ),
           Visibility(
-            visible: story!.url! != null,
+            visible: story!.url != null,
             child: Text(formattedUrl,
                 maxLines: 2,
                 style: const TextStyle(

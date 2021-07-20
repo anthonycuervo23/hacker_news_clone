@@ -1,5 +1,6 @@
-import 'package:hacker_news_clone/data/enum/hacker_news_enum.dart';
+import 'dart:convert';
 import 'package:hacker_news_clone/data/models/story.dart';
+import 'package:hacker_news_clone/data/services/url_helper.dart';
 import 'package:http/http.dart' as http;
 
 class ApiNetworkHelper {
@@ -7,11 +8,9 @@ class ApiNetworkHelper {
 
   final http.Client httpClient;
 
-  static const String _baseUrl = 'https://hacker-news.firebaseio.com/v0';
-
-  Future<Story?> getStory(int id) async {
-    final String url = '$_baseUrl/item/$id.json';
-    final http.Response response = await httpClient.get(Uri.parse(url));
+  Future<Story?> getStory(dynamic id) async {
+    final http.Response response =
+        await httpClient.get(Uri.parse(UrlHelper.urlForStory(id)));
 
     if (response.statusCode == 200) {
       return Story.fromJson(response.body);
@@ -20,14 +19,16 @@ class ApiNetworkHelper {
     }
   }
 
-  Future<List<int>> getIds(StoriesType? type) async {
-    final String partUrl =
-        type == StoriesType.topStories ? 'topstories' : 'newstories';
-    final String url = '$_baseUrl/$partUrl.json';
-    final http.Response response = await httpClient.get(Uri.parse(url));
+  Future<List<Story?>> getStories(String type, int count) async {
+    final http.Response response =
+        await httpClient.get(Uri.parse(UrlHelper.urlStories(type)));
     if (response.statusCode == 200) {
-      return Story.parseStoriesId(response.body);
+      final dynamic storyIds = jsonDecode(response.body);
+      if (storyIds is Iterable && storyIds != null)
+        return Future.wait(storyIds.take(count).map((dynamic storyId) {
+          return getStory(storyId);
+        }));
     }
-    return <int>[];
+    throw Exception('Nothing');
   }
 }
