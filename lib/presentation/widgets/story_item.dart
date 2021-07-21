@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hacker_news_clone/data/bloc/db/db_bloc.dart';
 import 'package:hacker_news_clone/data/models/story.dart';
 import 'package:hacker_news_clone/presentation/widgets/info_with_buttons.dart';
 import 'package:hacker_news_clone/presentation/widgets/title_with_url.dart';
@@ -41,6 +43,8 @@ class _NewsItemState extends State<NewsItem> {
             onTap: () {
               if (story.url! != null) {
                 _launchBrowser(story.url!);
+                BlocProvider.of<DbBloc>(context)
+                    .add(OnInsertReadStory(story: story));
               }
             },
             child: Padding(
