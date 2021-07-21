@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:hacker_news_clone/data/models/story.dart';
 import 'package:share/share.dart';
+
+//My imports
+import 'package:hacker_news_clone/data/models/story.dart';
 
 class InfoWithButtons extends StatelessWidget {
   const InfoWithButtons(
@@ -79,7 +81,6 @@ class InfoWithButtons extends StatelessWidget {
                         : Theme.of(context).hintColor.withOpacity(0.6),
                     size: 16,
                   ),
-                  //need to do this
                   Text(
                     '  ${story!.timeAgo}',
                     style: TextStyle(

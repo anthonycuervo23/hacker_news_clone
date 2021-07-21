@@ -1,5 +1,7 @@
-import 'package:hacker_news_clone/data/models/story.dart';
 import 'package:moor_flutter/moor_flutter.dart';
+
+//My imports
+import 'package:hacker_news_clone/data/models/story.dart';
 
 part 'watched_stories.g.dart';
 
@@ -25,18 +27,6 @@ class MyDatabase extends _$MyDatabase {
 
   // loads all watchedStories entries
   Future<List<WatchedStorie>> get allStories => select(watchedStories).get();
-
-  // watches all stories entries in a given category. The stream will automatically
-  // emit new items whenever the underlying data changes.
-  Stream<bool> isAWatchedStory(int id) {
-    return (select(watchedStories)
-          ..where((WatchedStories story) => story.id.equals(id)))
-        .watch()
-        .map((List<WatchedStorie> stories) => stories.isNotEmpty);
-  }
-
-  Stream<List<WatchedStorie>> watchAllStories() =>
-      select(watchedStories).watch();
 
   void insertStory(Story story) {
     final WatchedStorie watchedStory =

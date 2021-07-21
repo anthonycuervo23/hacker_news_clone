@@ -1,6 +1,8 @@
+import 'package:http/http.dart' as http;
+
+//My imports
 import 'package:hacker_news_clone/data/models/story.dart';
 import 'package:hacker_news_clone/data/services/api_network.dart';
-import 'package:http/http.dart' as http;
 
 class Repository {
   final ApiNetworkHelper apiNetworkHelper = ApiNetworkHelper(http.Client());

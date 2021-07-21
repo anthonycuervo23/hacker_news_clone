@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
+
+//My imports
 import 'package:hacker_news_clone/data/bloc/db/db_bloc.dart';
 import 'package:hacker_news_clone/data/bloc/stories/stories_bloc.dart';
 import 'package:hacker_news_clone/data/db/watched_stories.dart';
-import 'package:hacker_news_clone/data/enum/hacker_news_enum.dart';
+import 'package:hacker_news_clone/data/utils/hacker_news_enum.dart';
 import 'package:hacker_news_clone/data/services/api_repository.dart';
 import 'package:hacker_news_clone/presentation/widgets/loading_container.dart';
 import 'package:hacker_news_clone/presentation/widgets/story_item.dart';
-//My imports
 import 'package:hacker_news_clone/data/models/story.dart';
-import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -143,93 +144,98 @@ class _HomePageState extends State<HomePage>
         )
       ],
       child: BlocBuilder<StoriesBloc, StoriesState>(
-        builder: (BuildContext context, StoriesState state) {
-          final StoriesBloc bloc = BlocProvider.of<StoriesBloc>(context);
-          return Scaffold(
-            appBar: AppBar(
-              title: RichText(
-                text: TextSpan(
-                  children: <TextSpan>[
-                    TextSpan(
-                      text: 'HN  ',
-                      style: TextStyle(
+        builder: (BuildContext context, StoriesState storyState) {
+          final StoriesBloc storyBloc = BlocProvider.of<StoriesBloc>(context);
+          return BlocBuilder<DbBloc, DbState>(
+              builder: (BuildContext context, DbState dbState) {
+            final DbBloc dbBloc = BlocProvider.of<DbBloc>(context);
+
+            return Scaffold(
+              appBar: AppBar(
+                title: RichText(
+                  text: TextSpan(
+                    children: <TextSpan>[
+                      TextSpan(
+                        text: 'HN  ',
+                        style: TextStyle(
+                            color: Theme.of(context)
+                                .textTheme
+                                .headline6!
+                                .color!
+                                .withOpacity(0.9),
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700),
+                      ),
+                      TextSpan(
+                        text: storyState.storiesName,
+                        style: TextStyle(
+                            color: Theme.of(context).hintColor,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600),
+                      ),
+                    ],
+                  ),
+                ),
+                elevation: 0,
+              ),
+              body: _buildStoriesList(context, storyBloc, dbBloc),
+              bottomNavigationBar: BottomAppBar(
+                  child: Padding(
+                padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    IconButton(
+                        icon: Icon(
+                          Icons.refresh_outlined,
                           color: Theme.of(context)
                               .textTheme
                               .headline6!
                               .color!
-                              .withOpacity(0.9),
-                          fontSize: 20,
-                          fontWeight: FontWeight.w700),
-                    ),
-                    TextSpan(
-                      text: state.storiesName,
-                      style: TextStyle(
-                          color: Theme.of(context).hintColor,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600),
-                    ),
+                              .withOpacity(0.8),
+                        ),
+                        onPressed: () {
+                          //START ANIMATION
+                          // setState(() {});
+                          dbBloc.add(OnGetStoriesFromDB());
+                          storyBloc.add(OnGetStories());
+                        }),
+                    IconButton(
+                        icon: Icon(
+                          Icons.menu_outlined,
+                          color: Theme.of(context)
+                              .textTheme
+                              .headline6!
+                              .color!
+                              .withOpacity(0.8),
+                        ),
+                        onPressed: () {
+                          openBottomSheet(storyBloc);
+                        }),
+                    IconButton(
+                        icon: Icon(
+                          Icons.settings_outlined,
+                          color: Theme.of(context)
+                              .textTheme
+                              .headline6!
+                              .color!
+                              .withOpacity(0.8),
+                        ),
+                        onPressed: () {
+                          //ADD AN OPTION TO CHANGE THE THEME OF THE APP
+                        }),
                   ],
                 ),
-              ),
-              elevation: 0,
-            ),
-            body: _buildStoriesList(context, bloc),
-            bottomNavigationBar: BottomAppBar(
-                child: Padding(
-              padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  IconButton(
-                      icon: Icon(
-                        Icons.refresh_outlined,
-                        color: Theme.of(context)
-                            .textTheme
-                            .headline6!
-                            .color!
-                            .withOpacity(0.8),
-                      ),
-                      onPressed: () {
-                        //START ANIMATION
-                        // setState(() {});
-                        BlocProvider.of<DbBloc>(context)
-                            .add(OnGetStoriesFromDB());
-                        bloc.add(OnGetStories());
-                      }),
-                  IconButton(
-                      icon: Icon(
-                        Icons.menu_outlined,
-                        color: Theme.of(context)
-                            .textTheme
-                            .headline6!
-                            .color!
-                            .withOpacity(0.8),
-                      ),
-                      onPressed: () {
-                        openBottomSheet(bloc);
-                      }),
-                  IconButton(
-                      icon: Icon(
-                        Icons.settings_outlined,
-                        color: Theme.of(context)
-                            .textTheme
-                            .headline6!
-                            .color!
-                            .withOpacity(0.8),
-                      ),
-                      onPressed: () {
-                        // TODO(jean): add change theme color and other options.
-                      }),
-                ],
-              ),
-            )),
-          );
+              )),
+            );
+          });
         },
       ),
     );
   }
 
-  Widget _buildStoriesList(BuildContext context, StoriesBloc bloc) {
+  Widget _buildStoriesList(
+      BuildContext context, StoriesBloc bloc, DbBloc dbBloc) {
     return BlocConsumer<StoriesBloc, StoriesState>(
       listener: (BuildContext context, StoriesState state) {
         if (state.status == NewsStatus.error) {
@@ -269,8 +275,8 @@ class _HomePageState extends State<HomePage>
                           itemBuilder: (BuildContext context, int index) {
                             print(
                                 'Item id ${state.stories![index]} and $index');
-                            final Future<Story?> item =
-                                bloc.getStoriesById(state.stories![index]!.id);
+                            // final Future<Story?> item =
+                            //     bloc.getStoriesById(state.stories![index]!.id);
                             return NewsItem(
                                 key: UniqueKey(),
                                 item: Story((StoryBuilder b) => b
@@ -283,11 +289,8 @@ class _HomePageState extends State<HomePage>
                                   ..time = state.stories![index]!.time
                                   ..type = state.stories![index]!.type
                                   ..by = state.stories![index]!.by
-                                  ..seen = BlocProvider.of<DbBloc>(context)
-                                          .state
-                                          .listIdsRead!
-                                          .contains(
-                                              state.stories![index]!.id) ||
+                                  ..seen = dbBloc.state.listIdsRead!.contains(
+                                          state.stories![index]!.id) ||
                                       false),
                                 counter: index);
                           },

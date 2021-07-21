@@ -1,10 +1,11 @@
 import 'dart:async';
-
 import 'package:bloc/bloc.dart';
-import 'package:hacker_news_clone/data/enum/hacker_news_enum.dart';
+import 'package:meta/meta.dart';
+
+//My imports
+import 'package:hacker_news_clone/data/utils/hacker_news_enum.dart';
 import 'package:hacker_news_clone/data/models/story.dart';
 import 'package:hacker_news_clone/data/services/api_repository.dart';
-import 'package:meta/meta.dart';
 
 part 'stories_event.dart';
 part 'stories_state.dart';

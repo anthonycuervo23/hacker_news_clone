@@ -2,8 +2,10 @@ import 'dart:convert';
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
-import 'package:hacker_news_clone/data/models/serializers.dart';
 import 'package:timeago/timeago.dart' as timeago;
+
+//My imports
+import 'package:hacker_news_clone/data/models/serializers.dart';
 
 part 'story.g.dart';
 

@@ -1,12 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+//My imports
 import 'package:hacker_news_clone/data/bloc/db/db_bloc.dart';
-import 'package:hacker_news_clone/data/bloc/stories/stories_bloc.dart';
 import 'package:hacker_news_clone/data/models/story.dart';
 import 'package:hacker_news_clone/presentation/widgets/info_with_buttons.dart';
 import 'package:hacker_news_clone/presentation/widgets/title_with_url.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class NewsItem extends StatefulWidget {
   const NewsItem({Key? key, required this.item, this.counter})
@@ -31,18 +32,6 @@ class _NewsItemState extends State<NewsItem> {
   @override
   Widget build(BuildContext context) {
     final DbBloc dbBloc = BlocProvider.of<DbBloc>(context);
-    final StoriesBloc bloc = BlocProvider.of<StoriesBloc>(context);
-    //return
-    // FutureBuilder<Story?>(
-    //   future: widget.item,
-    //   builder: (BuildContext context, AsyncSnapshot<Story?> snapshot) {
-    //     // if (!snapshot.hasData) {
-    //     //   return const LoadingContainer();
-    //     // }
-    //     final Story? story = snapshot.data;
-    //     if (story == null) {
-    //       return Container();
-    //     }
     return InkWell(
       onTap: () {
         if (widget.item!.url! != null) {
