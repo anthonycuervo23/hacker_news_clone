@@ -5,7 +5,6 @@ class TitleWithUrl extends StatelessWidget {
   const TitleWithUrl({Key? key, this.story}) : super(key: key);
 
   final Story? story;
-
   @override
   Widget build(BuildContext context) {
     String formattedUrl = ' ';
@@ -20,9 +19,11 @@ class TitleWithUrl extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           Text(story!.title!,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 20,
-                color: Colors.white,
+                color: story!.seen!
+                    ? Theme.of(context).disabledColor
+                    : Theme.of(context).textTheme.headline6!.color!,
               )),
           const SizedBox(
             height: 10,
@@ -31,9 +32,11 @@ class TitleWithUrl extends StatelessWidget {
             visible: story!.url != null,
             child: Text(formattedUrl,
                 maxLines: 2,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 12.5,
-                  color: Colors.deepOrangeAccent,
+                  color: story!.seen!
+                      ? Theme.of(context).accentColor.withOpacity(0.3)
+                      : Theme.of(context).accentColor.withOpacity(0.9),
                 )),
           ),
           const SizedBox(

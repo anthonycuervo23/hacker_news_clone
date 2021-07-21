@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hacker_news_clone/data/bloc/db/db_bloc.dart';
+import 'package:hacker_news_clone/data/bloc/stories/stories_bloc.dart';
 import 'package:hacker_news_clone/data/models/story.dart';
 import 'package:hacker_news_clone/presentation/widgets/info_with_buttons.dart';
 import 'package:hacker_news_clone/presentation/widgets/title_with_url.dart';
@@ -11,7 +12,7 @@ class NewsItem extends StatefulWidget {
   const NewsItem({Key? key, required this.item, this.counter})
       : super(key: key);
 
-  final Future<Story?> item;
+  final Story? item;
   final int? counter;
   @override
   _NewsItemState createState() => _NewsItemState();
@@ -29,40 +30,60 @@ class _NewsItemState extends State<NewsItem> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Story?>(
-        future: widget.item,
-        builder: (BuildContext context, AsyncSnapshot<Story?> snapshot) {
-          // if (!snapshot.hasData) {
-          //   return const LoadingContainer();
-          // }
-          final Story? story = snapshot.data;
-          if (story == null) {
-            return Container();
+    final DbBloc dbBloc = BlocProvider.of<DbBloc>(context);
+    final StoriesBloc bloc = BlocProvider.of<StoriesBloc>(context);
+    //return
+    // FutureBuilder<Story?>(
+    //   future: widget.item,
+    //   builder: (BuildContext context, AsyncSnapshot<Story?> snapshot) {
+    //     // if (!snapshot.hasData) {
+    //     //   return const LoadingContainer();
+    //     // }
+    //     final Story? story = snapshot.data;
+    //     if (story == null) {
+    //       return Container();
+    //     }
+    return InkWell(
+      onTap: () {
+        if (widget.item!.url! != null) {
+          _launchBrowser(widget.item!.url!);
+
+          //DB
+          if (!widget.item!.seen!) {
+            dbBloc.add(OnInsertReadStory(story: widget.item));
+            dbBloc.add(OnGetStoriesFromDB());
           }
-          return InkWell(
-            onTap: () {
-              if (story.url! != null) {
-                _launchBrowser(story.url!);
-                BlocProvider.of<DbBloc>(context)
-                    .add(OnInsertReadStory(story: story));
-              }
-            },
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(5, 0, 0, 13),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  TitleWithUrl(
-                    story: story,
-                  ),
-                  InfoWithButtons(
-                      counter: widget.counter,
-                      story: story,
-                      launchBrowser: _launchBrowser)
-                ],
-              ),
+        } else {
+          // IF ASK/SHOW HN
+          _launchBrowser(
+              'https://news.ycombinator.com/item?id=${widget.item!.id}');
+
+          //DB
+          if (!widget.item!.seen!) {
+            dbBloc.add(OnInsertReadStory(story: widget.item));
+            dbBloc.add(OnGetStoriesFromDB());
+          }
+        }
+      },
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(5, 0, 0, 13),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            TitleWithUrl(
+              story: widget.item,
+              //isWatched: isWatched,
             ),
-          );
-        });
+            InfoWithButtons(
+              counter: widget.counter,
+              story: widget.item,
+              launchBrowser: _launchBrowser,
+              //isWatched: isWatched,
+            ),
+          ],
+        ),
+      ),
+    );
+    // });
   }
 }

@@ -3,6 +3,7 @@ import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 import 'package:hacker_news_clone/data/models/serializers.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 part 'story.g.dart';
 
@@ -54,9 +55,11 @@ abstract class Story implements Built<Story, StoryBuilder> {
   /// In the case of stories or polls, the total comment count.
   int? get descendants;
 
-  // Map<String, dynamic> toJson() {
-  //   return serializers.serializeWith(Story.serializer, this);
-  // }
+  bool? get seen;
+
+  String get timeAgo {
+    return timeago.format(DateTime.fromMillisecondsSinceEpoch(time * 1000));
+  }
 
   static Story? fromJson(String jsonStr) {
     final dynamic parsed = json.decode(jsonStr);

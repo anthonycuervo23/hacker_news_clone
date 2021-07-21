@@ -103,6 +103,13 @@ class _$StorySerializer implements StructuredSerializer<Story> {
         ..add('descendants')
         ..add(serializers.serialize(value, specifiedType: const FullType(int)));
     }
+    value = object.seen;
+    if (value != null) {
+      result
+        ..add('seen')
+        ..add(
+            serializers.serialize(value, specifiedType: const FullType(bool)));
+    }
     return result;
   }
 
@@ -181,6 +188,10 @@ class _$StorySerializer implements StructuredSerializer<Story> {
           result.descendants = serializers.deserialize(value,
               specifiedType: const FullType(int)) as int?;
           break;
+        case 'seen':
+          result.seen = serializers.deserialize(value,
+              specifiedType: const FullType(bool)) as bool?;
+          break;
       }
     }
 
@@ -219,6 +230,8 @@ class _$Story extends Story {
   final BuiltList<int>? parts;
   @override
   final int? descendants;
+  @override
+  final bool? seen;
 
   factory _$Story([void Function(StoryBuilder)? updates]) =>
       (new StoryBuilder()..update(updates)).build();
@@ -238,7 +251,8 @@ class _$Story extends Story {
       this.score,
       this.title,
       this.parts,
-      this.descendants})
+      this.descendants,
+      this.seen})
       : super._() {
     BuiltValueNullFieldError.checkNotNull(id, 'Story', 'id');
     BuiltValueNullFieldError.checkNotNull(type, 'Story', 'type');
@@ -271,7 +285,8 @@ class _$Story extends Story {
         score == other.score &&
         title == other.title &&
         parts == other.parts &&
-        descendants == other.descendants;
+        descendants == other.descendants &&
+        seen == other.seen;
   }
 
   @override
@@ -289,21 +304,25 @@ class _$Story extends Story {
                                             $jc(
                                                 $jc(
                                                     $jc(
-                                                        $jc($jc(0, id.hashCode),
-                                                            deleted.hashCode),
-                                                        type.hashCode),
-                                                    by.hashCode),
-                                                time.hashCode),
-                                            text.hashCode),
-                                        dead.hashCode),
-                                    parent.hashCode),
-                                poll.hashCode),
-                            kids.hashCode),
-                        url.hashCode),
-                    score.hashCode),
-                title.hashCode),
-            parts.hashCode),
-        descendants.hashCode));
+                                                        $jc(
+                                                            $jc(
+                                                                $jc(0,
+                                                                    id.hashCode),
+                                                                deleted.hashCode),
+                                                            type.hashCode),
+                                                        by.hashCode),
+                                                    time.hashCode),
+                                                text.hashCode),
+                                            dead.hashCode),
+                                        parent.hashCode),
+                                    poll.hashCode),
+                                kids.hashCode),
+                            url.hashCode),
+                        score.hashCode),
+                    title.hashCode),
+                parts.hashCode),
+            descendants.hashCode),
+        seen.hashCode));
   }
 
   @override
@@ -323,7 +342,8 @@ class _$Story extends Story {
           ..add('score', score)
           ..add('title', title)
           ..add('parts', parts)
-          ..add('descendants', descendants))
+          ..add('descendants', descendants)
+          ..add('seen', seen))
         .toString();
   }
 }
@@ -391,6 +411,10 @@ class StoryBuilder implements Builder<Story, StoryBuilder> {
   int? get descendants => _$this._descendants;
   set descendants(int? descendants) => _$this._descendants = descendants;
 
+  bool? _seen;
+  bool? get seen => _$this._seen;
+  set seen(bool? seen) => _$this._seen = seen;
+
   StoryBuilder();
 
   StoryBuilder get _$this {
@@ -411,6 +435,7 @@ class StoryBuilder implements Builder<Story, StoryBuilder> {
       _title = $v.title;
       _parts = $v.parts?.toBuilder();
       _descendants = $v.descendants;
+      _seen = $v.seen;
       _$v = null;
     }
     return this;
@@ -449,7 +474,8 @@ class StoryBuilder implements Builder<Story, StoryBuilder> {
               score: score,
               title: title,
               parts: _parts?.build(),
-              descendants: descendants);
+              descendants: descendants,
+              seen: seen);
     } catch (_) {
       late String _$failedField;
       try {

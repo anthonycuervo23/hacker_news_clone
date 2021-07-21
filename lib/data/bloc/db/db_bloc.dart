@@ -12,19 +12,17 @@ class DbBloc extends Bloc<DbEvent, DbState> {
   DbBloc(this.db) : super(const DbState());
   final MyDatabase db;
 
-  void insertStory(Story story) {
-    final WatchedStorie watchedStory =
-        WatchedStorie(id: story.id, title: story.title!);
-    db.into(db.watchedStories).insert(watchedStory);
-  }
-
   @override
   Stream<DbState> mapEventToState(
     DbEvent event,
   ) async* {
     if (event is OnGetStoriesFromDB) {
-      final List<WatchedStorie> test = await db.allStories;
-      print(test);
+      final List<int> ids = <int>[];
+      final List<WatchedStorie> watchedStories = await db.allStories;
+      watchedStories.forEach((WatchedStorie story) {
+        ids.add(story.id);
+      });
+      yield state.copyWith(listIdsRead: ids);
     }
     if (event is OnInsertReadStory) {
       db.insertStory(event.story!);
