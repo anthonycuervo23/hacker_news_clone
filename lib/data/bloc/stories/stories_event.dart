@@ -3,17 +3,14 @@ part of 'stories_bloc.dart';
 @immutable
 abstract class StoriesEvent {}
 
-class OnGetNewStories extends StoriesEvent {}
-
-class OnGetTopStories extends StoriesEvent {}
-
 class OnGetStories extends StoriesEvent {}
 
+class OnGetMoreStories extends StoriesEvent {}
+
 class OnSelectedTab extends StoriesEvent {
-  OnSelectedTab({this.type, this.loading, this.storiesName});
+  OnSelectedTab({this.type, this.storiesName});
 
   final String? type;
-  final bool? loading;
   final String? storiesName;
 }
 

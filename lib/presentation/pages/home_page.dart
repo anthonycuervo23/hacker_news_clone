@@ -18,13 +18,10 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage>
     with AutomaticKeepAliveClientMixin {
-  int _currentIndex = 0;
-  bool _isFetched = false;
   String? pageName;
   List<ArticlePages> listArticlePages = ArticlePages().getArticlePages();
 
   void openBottomSheet(StoriesBloc bloc) {
-    // final StoriesBloc bloc = BlocProvider.of<StoriesBloc>(context);
     showModalBottomSheet<Widget>(
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
@@ -33,11 +30,11 @@ class _HomePageState extends State<HomePage>
         isScrollControlled: true,
         context: context,
         builder: (BuildContext bc) {
-          return Wrap(children: [
+          return Wrap(children: <Widget>[
             Padding(
               padding: const EdgeInsets.fromLTRB(0, 12, 0, 12),
               child: Column(
-                children: [
+                children: <Widget>[
                   Center(
                     child: ListTile(
                       title: const Text(
@@ -65,6 +62,10 @@ class _HomePageState extends State<HomePage>
                     itemBuilder: (BuildContext context, int index) {
                       return ListTile(
                         onTap: () {
+                          if (listArticlePages[index].name! ==
+                              bloc.state.storiesName) {
+                            return;
+                          }
                           Navigator.of(context).pop();
                           bloc.add(OnSelectedTab(
                               type: listArticlePages[index].urlType,
@@ -153,78 +154,12 @@ class _HomePageState extends State<HomePage>
           elevation: 0,
         ),
         body: _buildStoriesList(context, bloc),
-        // AnimatedSwitcher(
-        //   duration: const Duration(milliseconds: 600),
-        //   child:
-        //       // state.loading
-        //       //     ?
-        //       //     LoadingContainer(
-        //       //   key: UniqueKey(),
-        //       //   pageName: state.storiesName,
-        //       // )
-        //       // :
-        //       LazyLoadScrollView(
-        //     onEndOfPage: () => _getMoreStoriesScrolling(),
-        //     isLoading: loadStoriesOnScroll,
-        //     child: RefreshIndicator(
-        //       onRefresh: _getStoriesOnStartup,
-        //       color: Theme.of(context).accentColor,
-        //       child: ListView(
-        //         physics: AlwaysScrollableScrollPhysics(),
-        //         children: [
-        //           ListView.separated(
-        //             separatorBuilder: (BuildContext context, int index) =>
-        //                 const Divider(),
-        //             physics: NeverScrollableScrollPhysics(),
-        //             shrinkWrap: true,
-        //             itemCount: _stories.length,
-        //             itemBuilder: (context, index) {
-        //               return ContainerStory(
-        //                   key: UniqueKey(),
-        //                   contador: index,
-        //                   refreshIdLidos: refreshIdLidos,
-        //                   story: new Story(
-        //                     storyId: _stories[index].storyId,
-        //                     title: _stories[index].title,
-        //                     url: _stories[index].url,
-        //                     score: _stories[index].score,
-        //                     commentsCount: _stories[index].commentsCount == null
-        //                         ? 0
-        //                         : _stories[index].commentsCount,
-        //                     time: _stories[index].time,
-        //                     lido: listIdsRead.contains(_stories[index].storyId)
-        //                         ? true
-        //                         : false,
-        //                   ));
-        //             },
-        //           ),
-        //           Visibility(
-        //               visible: loadStoriesOnScroll,
-        //               child: Align(
-        //                 alignment: Alignment.bottomCenter,
-        //                 child: PreferredSize(
-        //                   preferredSize: Size.fromHeight(2),
-        //                   child: LinearProgressIndicator(
-        //                     valueColor: new AlwaysStoppedAnimation<Color>(
-        //                         Theme.of(context).accentColor.withOpacity(0.8)),
-        //                     backgroundColor:
-        //                         Theme.of(context).accentColor.withOpacity(0.3),
-        //                   ),
-        //                 ),
-        //               ))
-        //         ],
-        //       ),
-        //     ),
-        //   ),
-        // ),
-
-        //_buildStoriesList(context, bloc),
         bottomNavigationBar: BottomAppBar(
             child: Padding(
           padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
+            children: <Widget>[
               IconButton(
                   icon: Icon(
                     Icons.refresh_outlined,
@@ -236,9 +171,7 @@ class _HomePageState extends State<HomePage>
                   ),
                   onPressed: () {
                     //START ANIMATION
-                    setState(() {
-                      // loading = true;
-                    });
+                    // setState(() {});
 
                     bloc.add(OnGetStories());
                   }),
@@ -264,48 +197,11 @@ class _HomePageState extends State<HomePage>
                         .withOpacity(0.8),
                   ),
                   onPressed: () {
-                    // Navigator.push(
-                    //     context,
-                    //     MaterialPageRoute<void>(
-                    //       builder: (BuildContext context) => SettingsPage(),
-                    //       fullscreenDialog: true,
-                    //     ));
+                    // TODO(jean): add change theme color and other options.
                   }),
             ],
           ),
         )),
-        // bottomNavigationBar: BottomNavigationBar(
-        //   currentIndex: _currentIndex,
-        //   items: const <BottomNavigationBarItem>[
-        //     BottomNavigationBarItem(
-        //         icon: Icon(Icons.keyboard_arrow_up), label: 'Top Stories'),
-        //     BottomNavigationBarItem(
-        //         icon: Icon(Icons.new_releases), label: 'New Stories')
-        //   ],
-        //   onTap: (int index) {
-        //     // if is first time => we fetch
-        //     // if is not => we do nothing
-        //     //
-        //     if (index == _currentIndex) {
-        //       return;
-        //     }
-        //     if (index == 0) {
-        //       bloc.add(OnSelectedTab(
-        //           type: listArticlePages[0].urlType,
-        //           storiesName: listArticlePages[0].name));
-        //       bloc.add(OnGetStories());
-        //     } else {
-        //       bloc.add(OnSelectedTab(
-        //           type: listArticlePages[1].urlType,
-        //           storiesName: listArticlePages[1].name));
-        //       bloc.add(OnGetStories());
-        //       //bloc.add(OnGetStoriesScrolling());
-        //     }
-        //     setState(() {
-        //       _currentIndex = index;
-        //     });
-        //   },
-        // ),
       );
     }));
   }
@@ -319,30 +215,65 @@ class _HomePageState extends State<HomePage>
         }
       },
       builder: (BuildContext context, StoriesState state) {
-        print('News state is${state.status}');
-        if (state.status == NewsStatus.initial ||
-            state.status == NewsStatus.loading) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (state.status == NewsStatus.error) {
-          return Center(child: Text(state.message!));
+        if (state.status == NewsStatus.error) {
+          return Center(
+            child: Text(state.message!),
+          );
         }
-        return RefreshIndicator(
-          onRefresh: () async {
-            if (_currentIndex == 0) {
-              //bloc.add(OnGetTopStories()); //this will rebuild build function
-            } else {
-              //bloc.add(OnGetNewStories()); //this will rebuild build function
-            }
-          },
-          child: ListView.builder(
-            itemCount: state.stories!.length,
-            itemBuilder: (BuildContext context, int index) {
-              print('Item id ${state.stories![index]} and $index');
-              final Future<Story?> item =
-                  bloc.getStoriesById(state.stories![index]!.id);
-              return NewsItem(item: item);
-            },
-          ),
+        return AnimatedSwitcher(
+          duration: const Duration(milliseconds: 600),
+          child: state.status == NewsStatus.initial ||
+                  state.status == NewsStatus.loading
+              ? LoadingContainer(
+                  key: UniqueKey(),
+                )
+              : LazyLoadScrollView(
+                  onEndOfPage: () => bloc.add(OnGetMoreStories()),
+                  isLoading: state.loadStoriesOnScroll,
+                  child: RefreshIndicator(
+                    onRefresh: () async {
+                      bloc.add(OnGetStories());
+                    },
+                    child: ListView(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      children: <Widget>[
+                        ListView.separated(
+                          separatorBuilder: (BuildContext context, int index) =>
+                              const Divider(),
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: state.stories!.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            print(
+                                'Item id ${state.stories![index]} and $index');
+                            final Future<Story?> item =
+                                bloc.getStoriesById(state.stories![index]!.id);
+                            return NewsItem(
+                                key: UniqueKey(), item: item, counter: index);
+                          },
+                        ),
+                        Visibility(
+                          visible: state.loadStoriesOnScroll,
+                          child: Align(
+                            alignment: Alignment.bottomCenter,
+                            child: PreferredSize(
+                              preferredSize: const Size.fromHeight(2),
+                              child: LinearProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                    Theme.of(context)
+                                        .accentColor
+                                        .withOpacity(0.8)),
+                                backgroundColor: Theme.of(context)
+                                    .accentColor
+                                    .withOpacity(0.3),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
         );
       },
     );

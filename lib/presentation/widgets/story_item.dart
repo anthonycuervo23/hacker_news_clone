@@ -2,22 +2,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hacker_news_clone/data/models/story.dart';
 import 'package:hacker_news_clone/presentation/widgets/info_with_buttons.dart';
-import 'package:hacker_news_clone/presentation/widgets/loading_container.dart';
 import 'package:hacker_news_clone/presentation/widgets/title_with_url.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class NewsItem extends StatefulWidget {
-  const NewsItem({Key? key, required this.item}) : super(key: key);
+  const NewsItem({Key? key, required this.item, this.counter})
+      : super(key: key);
 
   final Future<Story?> item;
-
+  final int? counter;
   @override
   _NewsItemState createState() => _NewsItemState();
 }
 
 class _NewsItemState extends State<NewsItem> {
-  final int? counter = 0;
-
   //URL LAUNCHER
   Future<void> _launchBrowser(String url) async {
     if (await canLaunch(url)) {
@@ -32,9 +30,9 @@ class _NewsItemState extends State<NewsItem> {
     return FutureBuilder<Story?>(
         future: widget.item,
         builder: (BuildContext context, AsyncSnapshot<Story?> snapshot) {
-          if (!snapshot.hasData) {
-            return const LoadingContainer();
-          }
+          // if (!snapshot.hasData) {
+          //   return const LoadingContainer();
+          // }
           final Story? story = snapshot.data;
           if (story == null) {
             return Container();
@@ -54,7 +52,7 @@ class _NewsItemState extends State<NewsItem> {
                     story: story,
                   ),
                   InfoWithButtons(
-                      counter: counter,
+                      counter: widget.counter,
                       story: story,
                       launchBrowser: _launchBrowser)
                 ],

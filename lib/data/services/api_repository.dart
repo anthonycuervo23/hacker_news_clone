@@ -15,4 +15,9 @@ class Repository {
   Future<List<Story?>> getStories(String type, int count) async {
     return apiNetworkHelper.getStories(type, count);
   }
+
+  Future<List<Story?>> getMoreStories(
+      String type, int count, int skipCount) async {
+    return apiNetworkHelper.getMoreStories(type, count, skipCount);
+  }
 }

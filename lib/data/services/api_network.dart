@@ -31,4 +31,17 @@ class ApiNetworkHelper {
     }
     throw Exception('Nothing');
   }
+
+  Future<List<Story?>> getMoreStories(String type, int count, int skipCount) async {
+    final http.Response response =
+    await httpClient.get(Uri.parse(UrlHelper.urlStories(type)));
+    if (response.statusCode == 200) {
+      final dynamic storyIds = jsonDecode(response.body);
+      if (storyIds is Iterable && storyIds != null)
+        return Future.wait(storyIds.skip(skipCount).take(count).map((dynamic storyId) {
+          return getStory(storyId);
+        }));
+    }
+    throw Exception('Nothing');
+  }
 }

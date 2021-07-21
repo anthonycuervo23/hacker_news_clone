@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hacker_news_clone/data/models/story.dart';
+import 'package:share/share.dart';
 
 class InfoWithButtons extends StatelessWidget {
   const InfoWithButtons(
@@ -76,8 +77,13 @@ class InfoWithButtons extends StatelessWidget {
                       : 75,
               height: 40,
               child: TextButton(
+                onLongPress: () {
+                  Share.share(
+                      'https://news.ycombinator.com/item?id=${story!.id}');
+                },
                 onPressed: () {
-                  //see comments page
+                  launchBrowser!(
+                      'https://news.ycombinator.com/item?id=${story!.id}');
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -111,7 +117,8 @@ class InfoWithButtons extends StatelessWidget {
                 ),
                 style: ElevatedButton.styleFrom(
                   elevation: 0,
-                  primary: Colors.white38,
+                  primary: Theme.of(context).cardTheme.color,
+                  onPrimary: Theme.of(context).accentColor,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(50.0),
                   ),
@@ -126,7 +133,13 @@ class InfoWithButtons extends StatelessWidget {
               height: 40,
               child: TextButton(
                 onPressed: () {
-                  //Share story link
+                  if (story!.url != null) {
+                    Share.share(story!.url!);
+                  } else {
+                    // ASK/SHOW HN
+                    Share.share(
+                        'https://news.ycombinator.com/item?id=${story!.id}');
+                  }
                 },
                 child: const Icon(
                   Icons.share_outlined,
@@ -135,7 +148,8 @@ class InfoWithButtons extends StatelessWidget {
                 ),
                 style: ElevatedButton.styleFrom(
                   elevation: 0,
-                  primary: Colors.white38,
+                  primary: Theme.of(context).cardTheme.color,
+                  onPrimary: Theme.of(context).accentColor,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(50.0),
                   ),
