@@ -1,3 +1,4 @@
+import 'package:built_collection/built_collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
@@ -271,28 +272,26 @@ class _HomePageState extends State<HomePage>
                               const Divider(),
                           physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
-                          itemCount: state.stories!.length,
+                          itemCount: state.stories.length,
                           itemBuilder: (BuildContext context, int index) {
-                            print(
-                                'Item id ${state.stories![index]} and $index');
-                            // final Future<Story?> item =
-                            //     bloc.getStoriesById(state.stories![index]!.id);
+                            print('Item id ${state.stories[index]} and $index');
+                            final Story item = Story((StoryBuilder b) => b
+                              ..id = state.stories[index]!.id
+                              ..title = state.stories[index]!.title
+                              ..deleted = state.stories[index]!.deleted
+                              // ..kids.update((ListBuilder<int> b) =>
+                              //     b..addAll(state.stories![index]!.kids!))
+                              ..url = state.stories[index]!.url
+                              ..score = state.stories[index]!.score
+                              ..descendants = state.stories[index]!.descendants
+                              ..time = state.stories[index]!.time
+                              ..type = state.stories[index]!.type
+                              ..by = state.stories[index]!.by
+                              ..seen = dbBloc.state.listIdsRead!
+                                      .contains(state.stories[index]!.id) ||
+                                  false);
                             return NewsItem(
-                                key: UniqueKey(),
-                                item: Story((StoryBuilder b) => b
-                                  ..id = state.stories![index]!.id
-                                  ..title = state.stories![index]!.title
-                                  ..url = state.stories![index]!.url
-                                  ..score = state.stories![index]!.score
-                                  ..descendants =
-                                      state.stories![index]!.descendants
-                                  ..time = state.stories![index]!.time
-                                  ..type = state.stories![index]!.type
-                                  ..by = state.stories![index]!.by
-                                  ..seen = dbBloc.state.listIdsRead!.contains(
-                                          state.stories![index]!.id) ||
-                                      false),
-                                counter: index);
+                                key: UniqueKey(), item: item, counter: index);
                           },
                         ),
                         Visibility(

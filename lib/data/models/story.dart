@@ -19,13 +19,13 @@ abstract class Story implements Built<Story, StoryBuilder> {
   bool? get deleted;
 
   /// The type of item "job", "story", "comment", "poll", or "pollopt"
-  String get type;
+  String? get type;
 
   /// 	The username of the item's author.
-  String get by;
+  String? get by;
 
   /// 	Creation date of the item, in Unix Time.
-  int get time;
+  int? get time;
 
   /// 	The comment, story or poll text. HTML.
   String? get text;
@@ -59,8 +59,10 @@ abstract class Story implements Built<Story, StoryBuilder> {
 
   bool? get seen;
 
+  BuiltList<Story>? get comments;
+
   String get timeAgo {
-    return timeago.format(DateTime.fromMillisecondsSinceEpoch(time * 1000));
+    return timeago.format(DateTime.fromMillisecondsSinceEpoch(time! * 1000));
   }
 
   static Story? fromJson(String jsonStr) {

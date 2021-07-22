@@ -6,7 +6,7 @@ class StoriesState {
       {required this.status,
       this.type = 'topstories',
       this.storiesName = 'Top Stories',
-      this.stories,
+      this.stories = const <Story?>[],
       this.loadStoriesOnScroll = false,
       this.message,
       this.ids});
@@ -15,7 +15,7 @@ class StoriesState {
   final String type;
   final List<int>? ids;
   final bool loadStoriesOnScroll;
-  final List<Story?>? stories;
+  final List<Story?> stories;
   final String? message;
   final String storiesName;
 

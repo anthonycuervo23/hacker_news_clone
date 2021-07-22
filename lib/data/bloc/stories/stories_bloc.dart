@@ -22,24 +22,23 @@ class StoriesBloc extends Bloc<StoriesEvent, StoriesState> {
     if (event is OnGetStories) {
       final List<Story> filteredStories = <Story>[];
       yield state.copyWith(status: NewsStatus.loading);
-      final List<Story?> stories = await repo.getStories(state.type, 30);
+      final List<Story?> stories = await repo.getStories(state.type, 20);
       if (stories.isEmpty) {
         yield state.copyWith(
             status: NewsStatus.error,
             message: 'Could not get stories, please try again');
       } else {
-        // for (final Story? story in stories) {
+        for (final Story? story in stories) {
+          if (story!.type == 'story') {
+            filteredStories.add(story);
+          }
+        }
+        // stories.forEach((Story? story) {
         //   if (story!.type != 'story') {
         //     return;
         //   }
         //   filteredStories.add(story);
-        // }
-        stories.forEach((Story? story) {
-          if (story!.type != 'story') {
-            return;
-          }
-          filteredStories.add(story);
-        });
+        // });
         yield state.copyWith(
           stories: filteredStories,
           status: NewsStatus.loaded,
@@ -47,30 +46,21 @@ class StoriesBloc extends Bloc<StoriesEvent, StoriesState> {
       }
     }
     if (event is OnGetMoreStories) {
-      //List<Story> test = <Story>[];
+      // List<Story> test = <Story>[];
       //test = state.stories;
       yield state.copyWith(loadStoriesOnScroll: true);
       final List<Story?> stories =
-          await repo.getMoreStories(state.type, 10, state.stories!.length);
+          await repo.getMoreStories(state.type, 10, state.stories.length);
       if (stories.isEmpty) {
         yield state.copyWith(
             status: NewsStatus.error,
             message: 'Could not load more stories, please try again');
       } else {
-        // final testStory = Story((b) => b
-        //   ..id = 123
-        //   ..type = 'story'
-        //   ..title = 'PRUEBA'
-        //   ..by = 'jeancuervo'
-        //   ..time = 123455);
-        //test!.add(testStory);
-        //test!.addAll(stories);
-        state.stories!.addAll(stories);
-
-        //REMOVE DUPLICATES
-        // final Set<int> ids = test.map((Story? story) => story!.id).toSet();
-        // test.retainWhere((Story? story) => ids.remove(story!.id));
-
+        for (final Story? story in stories) {
+          if (story!.descendants != null) {
+            state.stories.add(story);
+          }
+        }
         yield state.copyWith(
             stories: state.stories, loadStoriesOnScroll: false);
       }
