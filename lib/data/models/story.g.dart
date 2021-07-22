@@ -20,6 +20,10 @@ class _$StorySerializer implements StructuredSerializer<Story> {
     final result = <Object?>[
       'id',
       serializers.serialize(object.id, specifiedType: const FullType(int)),
+      'comments',
+      serializers.serialize(object.comments,
+          specifiedType:
+              const FullType(List, const [const FullType.nullable(Story)])),
     ];
     Object? value;
     value = object.deleted;
@@ -124,14 +128,6 @@ class _$StorySerializer implements StructuredSerializer<Story> {
         ..add(
             serializers.serialize(value, specifiedType: const FullType(bool)));
     }
-    value = object.comments;
-    if (value != null) {
-      result
-        ..add('comments')
-        ..add(serializers.serialize(value,
-            specifiedType:
-                const FullType(BuiltList, const [const FullType(Story)])));
-    }
     return result;
   }
 
@@ -215,10 +211,10 @@ class _$StorySerializer implements StructuredSerializer<Story> {
               specifiedType: const FullType(bool)) as bool?;
           break;
         case 'comments':
-          result.comments.replace(serializers.deserialize(value,
-                  specifiedType:
-                      const FullType(BuiltList, const [const FullType(Story)]))!
-              as BuiltList<Object?>);
+          result.comments = serializers.deserialize(value,
+                  specifiedType: const FullType(
+                      List, const [const FullType.nullable(Story)]))
+              as List<Story?>;
           break;
       }
     }
@@ -261,7 +257,7 @@ class _$Story extends Story {
   @override
   final bool? seen;
   @override
-  final BuiltList<Story>? comments;
+  final List<Story?> comments;
 
   factory _$Story([void Function(StoryBuilder)? updates]) =>
       (new StoryBuilder()..update(updates)).build();
@@ -283,9 +279,10 @@ class _$Story extends Story {
       this.parts,
       this.descendants,
       this.seen,
-      this.comments})
+      required this.comments})
       : super._() {
     BuiltValueNullFieldError.checkNotNull(id, 'Story', 'id');
+    BuiltValueNullFieldError.checkNotNull(comments, 'Story', 'comments');
   }
 
   @override
@@ -450,10 +447,9 @@ class StoryBuilder implements Builder<Story, StoryBuilder> {
   bool? get seen => _$this._seen;
   set seen(bool? seen) => _$this._seen = seen;
 
-  ListBuilder<Story>? _comments;
-  ListBuilder<Story> get comments =>
-      _$this._comments ??= new ListBuilder<Story>();
-  set comments(ListBuilder<Story>? comments) => _$this._comments = comments;
+  List<Story?>? _comments;
+  List<Story?>? get comments => _$this._comments;
+  set comments(List<Story?>? comments) => _$this._comments = comments;
 
   StoryBuilder();
 
@@ -476,7 +472,7 @@ class StoryBuilder implements Builder<Story, StoryBuilder> {
       _parts = $v.parts?.toBuilder();
       _descendants = $v.descendants;
       _seen = $v.seen;
-      _comments = $v.comments?.toBuilder();
+      _comments = $v.comments;
       _$v = null;
     }
     return this;
@@ -515,7 +511,8 @@ class StoryBuilder implements Builder<Story, StoryBuilder> {
               parts: _parts?.build(),
               descendants: descendants,
               seen: seen,
-              comments: _comments?.build());
+              comments: BuiltValueNullFieldError.checkNotNull(
+                  comments, 'Story', 'comments'));
     } catch (_) {
       late String _$failedField;
       try {
@@ -524,9 +521,6 @@ class StoryBuilder implements Builder<Story, StoryBuilder> {
 
         _$failedField = 'parts';
         _parts?.build();
-
-        _$failedField = 'comments';
-        _comments?.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
             'Story', _$failedField, e.toString());

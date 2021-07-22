@@ -49,18 +49,18 @@ class ApiNetworkHelper {
     throw Exception('Nothing');
   }
 
-  // Future<List<Story?>> getComments(Story? item) async {
-  //   if (item!.kids!.isEmpty) {
-  //     return <Story>[];
-  //   } else {
-  //     final List<Story?> comments =
-  //         await Future.wait(item.kids!.map((int id) => getStory(id)));
-  //     final List<List<Story?>> nestedComments = await Future.wait(
-  //         comments.map((Story? comment) => getComments(comment)));
-  //     for (int i = 0; i < nestedComments.length; i++) {
-  //       comments[i]!.comments = nestedComments[i];
-  //     }
-  //     return comments;
-  //   }
-  //}
+  Future<List<Story?>> getComments(Story? item) async {
+    if (item!.kids!.isEmpty) {
+      return <Story>[];
+    } else {
+      final List<Story?> comments =
+          await Future.wait(item.kids!.map((int id) => getStory(id)));
+      final List<List<Story?>> nestedComments = await Future.wait(
+          comments.map((Story? comment) => getComments(comment)));
+      for (int i = 0; i < nestedComments.length; i++) {
+        comments[i]!.toBuilder().comments = nestedComments[i];
+      }
+      return comments;
+    }
+  }
 }

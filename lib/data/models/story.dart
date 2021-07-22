@@ -59,7 +59,7 @@ abstract class Story implements Built<Story, StoryBuilder> {
 
   bool? get seen;
 
-  BuiltList<Story>? get comments;
+  List<Story?> get comments;
 
   String get timeAgo {
     return timeago.format(DateTime.fromMillisecondsSinceEpoch(time! * 1000));
