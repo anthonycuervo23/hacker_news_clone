@@ -20,12 +20,6 @@ class _$StorySerializer implements StructuredSerializer<Story> {
     final result = <Object?>[
       'id',
       serializers.serialize(object.id, specifiedType: const FullType(int)),
-      'type',
-      serializers.serialize(object.type, specifiedType: const FullType(String)),
-      'by',
-      serializers.serialize(object.by, specifiedType: const FullType(String)),
-      'time',
-      serializers.serialize(object.time, specifiedType: const FullType(int)),
     ];
     Object? value;
     value = object.deleted;
@@ -34,6 +28,26 @@ class _$StorySerializer implements StructuredSerializer<Story> {
         ..add('deleted')
         ..add(
             serializers.serialize(value, specifiedType: const FullType(bool)));
+    }
+    value = object.type;
+    if (value != null) {
+      result
+        ..add('type')
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(String)));
+    }
+    value = object.by;
+    if (value != null) {
+      result
+        ..add('by')
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(String)));
+    }
+    value = object.time;
+    if (value != null) {
+      result
+        ..add('time')
+        ..add(serializers.serialize(value, specifiedType: const FullType(int)));
     }
     value = object.text;
     if (value != null) {
@@ -103,6 +117,21 @@ class _$StorySerializer implements StructuredSerializer<Story> {
         ..add('descendants')
         ..add(serializers.serialize(value, specifiedType: const FullType(int)));
     }
+    value = object.seen;
+    if (value != null) {
+      result
+        ..add('seen')
+        ..add(
+            serializers.serialize(value, specifiedType: const FullType(bool)));
+    }
+    value = object.comments;
+    if (value != null) {
+      result
+        ..add('comments')
+        ..add(serializers.serialize(value,
+            specifiedType:
+                const FullType(BuiltList, const [const FullType(Story)])));
+    }
     return result;
   }
 
@@ -127,15 +156,15 @@ class _$StorySerializer implements StructuredSerializer<Story> {
           break;
         case 'type':
           result.type = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'by':
           result.by = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'time':
           result.time = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
+              specifiedType: const FullType(int)) as int?;
           break;
         case 'text':
           result.text = serializers.deserialize(value,
@@ -181,6 +210,16 @@ class _$StorySerializer implements StructuredSerializer<Story> {
           result.descendants = serializers.deserialize(value,
               specifiedType: const FullType(int)) as int?;
           break;
+        case 'seen':
+          result.seen = serializers.deserialize(value,
+              specifiedType: const FullType(bool)) as bool?;
+          break;
+        case 'comments':
+          result.comments.replace(serializers.deserialize(value,
+                  specifiedType:
+                      const FullType(BuiltList, const [const FullType(Story)]))!
+              as BuiltList<Object?>);
+          break;
       }
     }
 
@@ -194,11 +233,11 @@ class _$Story extends Story {
   @override
   final bool? deleted;
   @override
-  final String type;
+  final String? type;
   @override
-  final String by;
+  final String? by;
   @override
-  final int time;
+  final int? time;
   @override
   final String? text;
   @override
@@ -219,6 +258,10 @@ class _$Story extends Story {
   final BuiltList<int>? parts;
   @override
   final int? descendants;
+  @override
+  final bool? seen;
+  @override
+  final BuiltList<Story>? comments;
 
   factory _$Story([void Function(StoryBuilder)? updates]) =>
       (new StoryBuilder()..update(updates)).build();
@@ -226,9 +269,9 @@ class _$Story extends Story {
   _$Story._(
       {required this.id,
       this.deleted,
-      required this.type,
-      required this.by,
-      required this.time,
+      this.type,
+      this.by,
+      this.time,
       this.text,
       this.dead,
       this.parent,
@@ -238,12 +281,11 @@ class _$Story extends Story {
       this.score,
       this.title,
       this.parts,
-      this.descendants})
+      this.descendants,
+      this.seen,
+      this.comments})
       : super._() {
     BuiltValueNullFieldError.checkNotNull(id, 'Story', 'id');
-    BuiltValueNullFieldError.checkNotNull(type, 'Story', 'type');
-    BuiltValueNullFieldError.checkNotNull(by, 'Story', 'by');
-    BuiltValueNullFieldError.checkNotNull(time, 'Story', 'time');
   }
 
   @override
@@ -271,7 +313,9 @@ class _$Story extends Story {
         score == other.score &&
         title == other.title &&
         parts == other.parts &&
-        descendants == other.descendants;
+        descendants == other.descendants &&
+        seen == other.seen &&
+        comments == other.comments;
   }
 
   @override
@@ -289,21 +333,30 @@ class _$Story extends Story {
                                             $jc(
                                                 $jc(
                                                     $jc(
-                                                        $jc($jc(0, id.hashCode),
-                                                            deleted.hashCode),
-                                                        type.hashCode),
-                                                    by.hashCode),
-                                                time.hashCode),
-                                            text.hashCode),
-                                        dead.hashCode),
-                                    parent.hashCode),
-                                poll.hashCode),
-                            kids.hashCode),
-                        url.hashCode),
-                    score.hashCode),
-                title.hashCode),
-            parts.hashCode),
-        descendants.hashCode));
+                                                        $jc(
+                                                            $jc(
+                                                                $jc(
+                                                                    $jc(
+                                                                        0,
+                                                                        id
+                                                                            .hashCode),
+                                                                    deleted
+                                                                        .hashCode),
+                                                                type.hashCode),
+                                                            by.hashCode),
+                                                        time.hashCode),
+                                                    text.hashCode),
+                                                dead.hashCode),
+                                            parent.hashCode),
+                                        poll.hashCode),
+                                    kids.hashCode),
+                                url.hashCode),
+                            score.hashCode),
+                        title.hashCode),
+                    parts.hashCode),
+                descendants.hashCode),
+            seen.hashCode),
+        comments.hashCode));
   }
 
   @override
@@ -323,7 +376,9 @@ class _$Story extends Story {
           ..add('score', score)
           ..add('title', title)
           ..add('parts', parts)
-          ..add('descendants', descendants))
+          ..add('descendants', descendants)
+          ..add('seen', seen)
+          ..add('comments', comments))
         .toString();
   }
 }
@@ -391,6 +446,15 @@ class StoryBuilder implements Builder<Story, StoryBuilder> {
   int? get descendants => _$this._descendants;
   set descendants(int? descendants) => _$this._descendants = descendants;
 
+  bool? _seen;
+  bool? get seen => _$this._seen;
+  set seen(bool? seen) => _$this._seen = seen;
+
+  ListBuilder<Story>? _comments;
+  ListBuilder<Story> get comments =>
+      _$this._comments ??= new ListBuilder<Story>();
+  set comments(ListBuilder<Story>? comments) => _$this._comments = comments;
+
   StoryBuilder();
 
   StoryBuilder get _$this {
@@ -411,6 +475,8 @@ class StoryBuilder implements Builder<Story, StoryBuilder> {
       _title = $v.title;
       _parts = $v.parts?.toBuilder();
       _descendants = $v.descendants;
+      _seen = $v.seen;
+      _comments = $v.comments?.toBuilder();
       _$v = null;
     }
     return this;
@@ -435,11 +501,9 @@ class StoryBuilder implements Builder<Story, StoryBuilder> {
           new _$Story._(
               id: BuiltValueNullFieldError.checkNotNull(id, 'Story', 'id'),
               deleted: deleted,
-              type:
-                  BuiltValueNullFieldError.checkNotNull(type, 'Story', 'type'),
-              by: BuiltValueNullFieldError.checkNotNull(by, 'Story', 'by'),
-              time:
-                  BuiltValueNullFieldError.checkNotNull(time, 'Story', 'time'),
+              type: type,
+              by: by,
+              time: time,
               text: text,
               dead: dead,
               parent: parent,
@@ -449,7 +513,9 @@ class StoryBuilder implements Builder<Story, StoryBuilder> {
               score: score,
               title: title,
               parts: _parts?.build(),
-              descendants: descendants);
+              descendants: descendants,
+              seen: seen,
+              comments: _comments?.build());
     } catch (_) {
       late String _$failedField;
       try {
@@ -458,6 +524,9 @@ class StoryBuilder implements Builder<Story, StoryBuilder> {
 
         _$failedField = 'parts';
         _parts?.build();
+
+        _$failedField = 'comments';
+        _comments?.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
             'Story', _$failedField, e.toString());
