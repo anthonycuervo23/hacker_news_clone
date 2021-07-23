@@ -63,7 +63,6 @@ class ApiNetworkHelper {
 
         comments[i]!.comments!.addAll(test);
       }
-      //print(comments);
       return comments;
     }
   }

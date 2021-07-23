@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+
+//My imports
 import 'package:hacker_news_clone/data/models/story.dart';
 import 'package:hacker_news_clone/data/services/api_network.dart';
 import 'package:hacker_news_clone/presentation/widgets/comment/comment_item.dart';
 import 'package:hacker_news_clone/presentation/widgets/comment/header.dart';
-import 'package:http/http.dart' as http;
 
 class CommentPage extends StatefulWidget {
   const CommentPage({Key? key, this.item}) : super(key: key);
@@ -27,7 +29,6 @@ class _CommentPageState extends State<CommentPage> {
     //obtenemos los commentarios dentro de cada comentario principal
     test = await apiNetworkHelper.getComments(item);
     item!.comments!.addAll(test);
-    //print(item);
     return item;
   }
 
@@ -79,7 +80,6 @@ class _CommentPageState extends State<CommentPage> {
                       if (snapshot.hasData && snapshot.data != null) {
                         //aqui obtengo solo los comentarios padres
                         final Story? item = snapshot.data;
-                        //print(item);
                         comments[position - 1] = item!;
                         //debo crear un bloc para los comments y llamar al repo, y almacenar en una variable los comentarios para
                         //luego poder pasarlos como argumentos al widget.

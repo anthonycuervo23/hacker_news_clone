@@ -6,8 +6,8 @@ import 'package:url_launcher/url_launcher.dart';
 //My imports
 import 'package:hacker_news_clone/data/bloc/db/db_bloc.dart';
 import 'package:hacker_news_clone/data/models/story.dart';
-import 'package:hacker_news_clone/presentation/widgets/info_with_buttons.dart';
-import 'package:hacker_news_clone/presentation/widgets/title_with_url.dart';
+import 'package:hacker_news_clone/presentation/widgets/story/info_with_buttons.dart';
+import 'package:hacker_news_clone/presentation/widgets/story/title_with_url.dart';
 
 class NewsItem extends StatefulWidget {
   const NewsItem({Key? key, required this.item, this.counter})

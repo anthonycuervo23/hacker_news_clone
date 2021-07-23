@@ -4,13 +4,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
 
 //My imports
+import 'package:hacker_news_clone/presentation/widgets/story/story_item.dart';
 import 'package:hacker_news_clone/data/bloc/db/db_bloc.dart';
 import 'package:hacker_news_clone/data/bloc/stories/stories_bloc.dart';
 import 'package:hacker_news_clone/data/db/watched_stories.dart';
 import 'package:hacker_news_clone/data/utils/hacker_news_enum.dart';
 import 'package:hacker_news_clone/data/services/api_repository.dart';
-import 'package:hacker_news_clone/presentation/widgets/loading_container.dart';
-import 'package:hacker_news_clone/presentation/widgets/story_item.dart';
+import 'package:hacker_news_clone/presentation/widgets/story/loading_container.dart';
 import 'package:hacker_news_clone/data/models/story.dart';
 
 class HomePage extends StatefulWidget {
@@ -274,12 +274,11 @@ class _HomePageState extends State<HomePage>
                           shrinkWrap: true,
                           itemCount: state.stories.length,
                           itemBuilder: (BuildContext context, int index) {
-                            print('Item id ${state.stories[index]} and $index');
+                            //print('Item id ${state.stories[index]} and $index');
                             final Story item = Story((StoryBuilder b) => b
                               ..id = state.stories[index]!.id
                               ..title = state.stories[index]!.title
                               ..deleted = state.stories[index]!.deleted
-                              // ..kids = state.stories[index]!.kids
                               ..kids.update((ListBuilder<int> b) =>
                                   b..addAll(state.stories[index]!.kids!))
                               ..url = state.stories[index]!.url
