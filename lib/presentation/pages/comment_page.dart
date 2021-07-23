@@ -21,13 +21,17 @@ class _CommentPageState extends State<CommentPage> {
   Map<int, Story> comments = <int, Story>{};
 
   Future<Story> getItemWithComments(int id) async {
+    List<Story?> test = <Story>[];
     //aqui obtenemos el commentario principal
     final Story? item = await apiNetworkHelper.getStory(id);
     //obtenemos los commentarios dentro de cada comentario principal
-    item!.toBuilder().comments = await apiNetworkHelper.getComments(item);
+    test = await apiNetworkHelper.getComments(item);
+    item!.comments!.addAll(test);
+    //print(item);
     return item;
   }
 
+  //item!.toBuilder().comments
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,7 +50,7 @@ class _CommentPageState extends State<CommentPage> {
                         style: TextStyle(
                             fontWeight: FontWeight.w500, fontSize: 17.0)),
                   ),
-                )
+                ),
               ],
             )
           : ListView.builder(
@@ -73,7 +77,9 @@ class _CommentPageState extends State<CommentPage> {
                         );
                       }
                       if (snapshot.hasData && snapshot.data != null) {
+                        //aqui obtengo solo los comentarios padres
                         final Story? item = snapshot.data;
+                        //print(item);
                         comments[position - 1] = item!;
                         //debo crear un bloc para los comments y llamar al repo, y almacenar en una variable los comentarios para
                         //luego poder pasarlos como argumentos al widget.

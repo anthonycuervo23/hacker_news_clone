@@ -50,8 +50,7 @@ class ApiNetworkHelper {
   }
 
   Future<List<Story?>> getComments(Story? item) async {
-    //por lo que entendi, este funcion extrae todos los comentarios padres con sus comentarios hijos
-    //la funcion me retorna todos los comentarios padres y almacena los hijos en una variable dentro de Story
+    List<Story?> test = <Story>[];
     if (item!.kids!.isEmpty) {
       return <Story>[];
     } else {
@@ -60,10 +59,11 @@ class ApiNetworkHelper {
       final List<List<Story?>> nestedComments = await Future.wait(
           comments.map((Story? comment) => getComments(comment)));
       for (int i = 0; i < nestedComments.length; i++) {
-        //comments es una lista de comentarios padres
-        //comments[i] es un comentario padre y aqui almacenamos el comentario padre con sus comentarios hijos
-        comments[i]!.toBuilder().comments = nestedComments[i];
+        test = nestedComments[i];
+
+        //comments[i]!.toBuilder().comments = nestedComments[i];
       }
+      //print(comments);
       return comments;
     }
   }

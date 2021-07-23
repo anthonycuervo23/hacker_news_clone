@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:hacker_news_clone/data/models/story.dart';
-import 'package:timeago/timeago.dart' as timeago;
 
 class CommentRow extends StatelessWidget {
   const CommentRow({Key? key, this.item}) : super(key: key);
@@ -9,31 +9,39 @@ class CommentRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<Widget> children = <Widget>[];
-    children.add(CommentItem(
-      key: Key('${item!.id}'),
-      item: item,
-    ));
+    children.add(
+      CommentItem(
+        key: Key('${item!.id}'),
+        item: item,
+      ),
+    );
+    //esto esta vacio y por eso no agrega los comentarios hijos
     if (item!.comments!.isNotEmpty) {
       final List<Widget> comments = item!.comments!
-          .map((Story? item) => CommentRow(
-                item: item,
-                key: Key('${item!.id}'),
-              ))
-          .toList();
-
-      children.add(Padding(
-        padding: const EdgeInsets.only(left: 1.0),
-        child: IntrinsicHeight(
-            child: Row(
-          children: <Widget>[
-            Container(
-              width: 15.0,
-              color: const Color(0xFFFF6600),
+          .map(
+            (Story? item) => CommentRow(
+              item: item,
+              key: Key('${item!.id}'),
             ),
-            Expanded(child: Column(children: comments))
-          ],
-        )),
-      ));
+          )
+          .toList();
+      //print(comments);
+      children.add(
+        Padding(
+          padding: const EdgeInsets.only(left: 1.0),
+          child: IntrinsicHeight(
+            child: Row(
+              children: <Widget>[
+                Container(
+                  width: 15.0,
+                  color: const Color(0xFFFF6600),
+                ),
+                Column(children: comments),
+              ],
+            ),
+          ),
+        ),
+      );
     }
     return Column(children: children);
   }
@@ -44,7 +52,6 @@ class CommentItem extends StatelessWidget {
   final Story? item;
   @override
   Widget build(BuildContext context) {
-    // var date = DateTime.fromMillisecondsSinceEpoch(item!.time! * 1000);
     return GestureDetector(
       child: Container(
         padding: const EdgeInsets.all(16.0),
@@ -64,23 +71,26 @@ class CommentItem extends StatelessWidget {
                     ),
                   ),
                   Container(
-                      child: Text(
-                    // timeago.format(date),
-                    item!.timeAgo,
-                    style: const TextStyle(
-                        color: Color(0xFFFF6600),
-                        fontWeight: FontWeight.w700,
-                        fontSize: 17.0),
-                  )),
+                    child: Text(
+                      // timeago.format(date),
+                      item!.timeAgo,
+                      style: const TextStyle(
+                          color: Color(0xFFFF6600),
+                          fontWeight: FontWeight.w700,
+                          fontSize: 17.0),
+                    ),
+                  ),
                 ],
               ),
             ),
             Container(
               padding: const EdgeInsets.only(top: 6.0),
-              child: Text(
-                item!.text!.isNotEmpty ? item!.text! : '(Not available)',
-                style: const TextStyle(
-                    fontWeight: FontWeight.w300, fontSize: 16.0),
+              child: Html(
+                data: item!.text != null
+                    ? item!.text!
+                    : '(This comment was deleted)',
+                // style: const TextStyle(
+                //     fontWeight: FontWeight.w300, fontSize: 16.0),
               ),
             )
           ],
