@@ -59,7 +59,7 @@ abstract class Story implements Built<Story, StoryBuilder> {
 
   bool? get seen;
 
-  List<Story?> get comments;
+  List<Story?>? get comments;
 
   String get timeAgo {
     return timeago.format(DateTime.fromMillisecondsSinceEpoch(time! * 1000));
@@ -81,4 +81,9 @@ abstract class Story implements Built<Story, StoryBuilder> {
   }
 
   static Serializer<Story> get serializer => _$storySerializer;
+
+  @BuiltValueHook(initializeBuilder: true)
+  static void _setDefaults(StoryBuilder b) => b
+    ..comments = <Story?>[]
+    ..kids = ListBuilder<int>();
 }

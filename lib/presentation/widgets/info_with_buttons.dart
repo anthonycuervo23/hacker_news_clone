@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hacker_news_clone/presentation/pages/comment_page.dart';
 import 'package:share/share.dart';
 
 //My imports
@@ -110,8 +111,12 @@ class InfoWithButtons extends StatelessWidget {
                       'https://news.ycombinator.com/item?id=${story!.id}');
                 },
                 onPressed: () {
-                  launchBrowser!(
-                      'https://news.ycombinator.com/item?id=${story!.id}');
+                  // launchBrowser!(
+                  //     'https://news.ycombinator.com/item?id=${story!.id}');
+                  Navigator.push<dynamic>(
+                      context,
+                      MaterialPageRoute<dynamic>(
+                          builder: (_) => CommentPage(item: story)));
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,

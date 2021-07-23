@@ -279,8 +279,9 @@ class _HomePageState extends State<HomePage>
                               ..id = state.stories[index]!.id
                               ..title = state.stories[index]!.title
                               ..deleted = state.stories[index]!.deleted
-                              // ..kids.update((ListBuilder<int> b) =>
-                              //     b..addAll(state.stories![index]!.kids!))
+                              // ..kids = state.stories[index]!.kids
+                              ..kids.update((ListBuilder<int> b) =>
+                                  b..addAll(state.stories[index]!.kids!))
                               ..url = state.stories[index]!.url
                               ..score = state.stories[index]!.score
                               ..descendants = state.stories[index]!.descendants

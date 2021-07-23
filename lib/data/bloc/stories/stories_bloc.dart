@@ -33,12 +33,6 @@ class StoriesBloc extends Bloc<StoriesEvent, StoriesState> {
             filteredStories.add(story);
           }
         }
-        // stories.forEach((Story? story) {
-        //   if (story!.type != 'story') {
-        //     return;
-        //   }
-        //   filteredStories.add(story);
-        // });
         yield state.copyWith(
           stories: filteredStories,
           status: NewsStatus.loaded,
@@ -46,8 +40,6 @@ class StoriesBloc extends Bloc<StoriesEvent, StoriesState> {
       }
     }
     if (event is OnGetMoreStories) {
-      // List<Story> test = <Story>[];
-      //test = state.stories;
       yield state.copyWith(loadStoriesOnScroll: true);
       final List<Story?> stories =
           await repo.getMoreStories(state.type, 10, state.stories.length);
