@@ -61,7 +61,7 @@ class ApiNetworkHelper {
       for (int i = 0; i < nestedComments.length; i++) {
         test = nestedComments[i];
 
-        //comments[i]!.toBuilder().comments = nestedComments[i];
+        comments[i]!.comments!.addAll(test);
       }
       //print(comments);
       return comments;
