@@ -57,8 +57,10 @@ abstract class Story implements Built<Story, StoryBuilder> {
   /// In the case of stories or polls, the total comment count.
   int? get descendants;
 
+  /// a bool to check if a story has been seen and change the ui
   bool? get seen;
 
+  /// The list of comments inside a parent comment
   List<Story?>? get comments;
 
   String get timeAgo {

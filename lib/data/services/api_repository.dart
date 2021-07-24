@@ -5,6 +5,7 @@ import 'package:hacker_news_clone/data/models/story.dart';
 import 'package:hacker_news_clone/data/services/api_network.dart';
 
 class Repository {
+  //we use the Repository as a bridge to communicate between the ApiNetwork and the BloC
   final ApiNetworkHelper apiNetworkHelper = ApiNetworkHelper(http.Client());
 
   Future<Story?> fetchStory(int id) async {

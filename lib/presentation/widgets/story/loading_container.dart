@@ -103,7 +103,7 @@ class LoadingContainer extends StatelessWidget {
                                     height: 8,
                                   ),
                                   Row(
-                                    children: [
+                                    children: <Widget>[
                                       Icon(
                                         Icons.access_time_outlined,
                                         color: Theme.of(context)

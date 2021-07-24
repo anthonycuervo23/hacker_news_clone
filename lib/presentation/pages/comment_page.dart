@@ -24,15 +24,15 @@ class _CommentPageState extends State<CommentPage> {
 
   Future<Story> getItemWithComments(int id) async {
     List<Story?> test = <Story>[];
-    //aqui obtenemos el commentario principal
+    //here we get the parent comment
     final Story? item = await apiNetworkHelper.getStory(id);
-    //obtenemos los commentarios dentro de cada comentario principal
+    //and then we get all the comments nested in the parent comment
+    //and save then in a list
     test = await apiNetworkHelper.getComments(item);
     item!.comments!.addAll(test);
     return item;
   }
 
-  //item!.toBuilder().comments
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,10 +62,8 @@ class _CommentPageState extends State<CommentPage> {
                 }
 
                 return FutureBuilder<Story>(
-                    //getItemWithComments me da un comentario principal con todos los comentarios secundarios
-                    //pero al estar dentro de un listview va hacer eso por cada comentario principal que tengamos
-                    //por eso le estamos dando en itemcount: el length de item.kids que es donde tenemos la lista
-                    // con todos los ids de los comentarios principales
+                    //here we get the parent comment with all the nested comments and because we are
+                    //inside ListView.builder we do the same for all the parent comments inside the story
                     future:
                         getItemWithComments(widget.item!.kids![position - 1]),
                     builder:
@@ -78,11 +76,8 @@ class _CommentPageState extends State<CommentPage> {
                         );
                       }
                       if (snapshot.hasData && snapshot.data != null) {
-                        //aqui obtengo solo los comentarios padres
                         final Story? item = snapshot.data;
                         comments[position - 1] = item!;
-                        //debo crear un bloc para los comments y llamar al repo, y almacenar en una variable los comentarios para
-                        //luego poder pasarlos como argumentos al widget.
                         return CommentRow(
                             item: item, key: Key(item.id.toString()));
                       } else if (snapshot.hasError) {

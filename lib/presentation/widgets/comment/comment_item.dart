@@ -18,7 +18,7 @@ class CommentRow extends StatelessWidget {
         item: item,
       ),
     );
-    //esto esta vacio y por eso no agrega los comentarios hijos
+    //item.comments is the list with all the nested comments
     if (item!.comments!.isNotEmpty) {
       final List<Widget> comments = item!.comments!
           .map(
@@ -54,7 +54,7 @@ class CommentItem extends StatelessWidget {
   const CommentItem({Key? key, this.item}) : super(key: key);
   final Story? item;
 
-  void launchURL(String url) async {
+  Future<void> launchURL(String url) async {
     if (await canLaunch(url)) {
       await launch(url, forceSafariVC: true);
     }

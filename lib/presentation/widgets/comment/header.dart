@@ -9,7 +9,7 @@ class HeaderWidget extends StatelessWidget {
 
   final Story? item;
 
-  void launchURL(String url) async {
+  Future<void> launchURL(String url) async {
     if (await canLaunch(url)) {
       await launch(url, forceSafariVC: true);
     }

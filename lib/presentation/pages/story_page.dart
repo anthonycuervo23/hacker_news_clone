@@ -127,7 +127,7 @@ class _HomePageState extends State<HomePage>
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers: [
+      providers: <BlocProvider<dynamic>>[
         BlocProvider<StoriesBloc>(
           create: (_) {
             final StoriesBloc bloc =

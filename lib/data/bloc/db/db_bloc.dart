@@ -18,11 +18,12 @@ class DbBloc extends Bloc<DbEvent, DbState> {
     DbEvent event,
   ) async* {
     if (event is OnGetStoriesFromDB) {
+      // we get stories from DB and save ids in a list
       final List<int> ids = <int>[];
       final List<WatchedStorie> watchedStories = await db.allStories;
-      watchedStories.forEach((WatchedStorie story) {
+      for (final WatchedStorie story in watchedStories) {
         ids.add(story.id);
-      });
+      }
       yield state.copyWith(listIdsRead: ids);
     }
     if (event is OnInsertReadStory) {
