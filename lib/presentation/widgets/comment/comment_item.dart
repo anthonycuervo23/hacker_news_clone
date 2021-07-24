@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 
 //My imports
-import 'package:hacker_news_clone/data/models/story.dart';
+import 'package:hacker_news_clone/data/models/item.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class CommentRow extends StatelessWidget {
   const CommentRow({Key? key, this.item}) : super(key: key);
-  final Story? item;
+  final Item? item;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,7 @@ class CommentRow extends StatelessWidget {
     if (item!.comments!.isNotEmpty) {
       final List<Widget> comments = item!.comments!
           .map(
-            (Story? item) => CommentRow(
+            (Item? item) => CommentRow(
               item: item,
               key: Key('${item!.id}'),
             ),
@@ -52,7 +52,7 @@ class CommentRow extends StatelessWidget {
 
 class CommentItem extends StatelessWidget {
   const CommentItem({Key? key, this.item}) : super(key: key);
-  final Story? item;
+  final Item? item;
 
   Future<void> launchURL(String url) async {
     if (await canLaunch(url)) {
@@ -83,8 +83,8 @@ class CommentItem extends StatelessWidget {
                   item!.timeAgo,
                   style: TextStyle(
                       color: Theme.of(context).accentColor.withOpacity(0.9),
-                      fontWeight: FontWeight.w700,
-                      fontSize: 17.0),
+                      fontWeight: FontWeight.w600,
+                      fontSize: 15.0),
                 ),
               ],
             ),

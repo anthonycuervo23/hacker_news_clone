@@ -4,7 +4,7 @@ import 'package:meta/meta.dart';
 
 //My imports
 import 'package:hacker_news_clone/data/db/watched_stories.dart';
-import 'package:hacker_news_clone/data/models/story.dart';
+import 'package:hacker_news_clone/data/models/item.dart';
 
 part 'db_event.dart';
 part 'db_state.dart';

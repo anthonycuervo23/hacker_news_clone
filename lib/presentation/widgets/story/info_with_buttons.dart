@@ -3,14 +3,14 @@ import 'package:hacker_news_clone/presentation/pages/comment_page.dart';
 import 'package:share/share.dart';
 
 //My imports
-import 'package:hacker_news_clone/data/models/story.dart';
+import 'package:hacker_news_clone/data/models/item.dart';
 
 class InfoWithButtons extends StatelessWidget {
   const InfoWithButtons(
       {Key? key, this.story, this.counter, this.launchBrowser, this.isWatched})
       : super(key: key);
 
-  final Story? story;
+  final Item? story;
   final int? counter;
   final Function(String)? launchBrowser;
   final bool? isWatched;

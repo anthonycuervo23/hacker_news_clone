@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 //My imports
-import 'package:hacker_news_clone/data/models/story.dart';
+import 'package:hacker_news_clone/data/models/item.dart';
 import 'package:hacker_news_clone/data/services/url_helper.dart';
 
 class ApiNetworkHelper {
@@ -11,19 +11,19 @@ class ApiNetworkHelper {
   final http.Client httpClient;
 
   //We get one story or comment
-  Future<Story?> getStory(dynamic id) async {
+  Future<Item?> getItem(dynamic id) async {
     final http.Response response =
         await httpClient.get(Uri.parse(UrlHelper.urlForStory(id)));
 
     if (response.statusCode == 200) {
-      return Story.fromJson(response.body);
+      return Item.fromJson(response.body);
     } else {
       return null;
     }
   }
 
   // we get a list of stories ids from the selected type (top, best, news...)
-  Future<List<Story?>> getStories(String type, int count) async {
+  Future<List<Item?>> getStories(String type, int count) async {
     final http.Response response =
         await httpClient.get(Uri.parse(UrlHelper.urlStories(type)));
     if (response.statusCode == 200) {
@@ -31,14 +31,14 @@ class ApiNetworkHelper {
       if (storyIds is Iterable && storyIds != null)
         //we take just a certain amount of stories to retrieve
         return Future.wait(storyIds.take(count).map((dynamic storyId) {
-          return getStory(storyId);
+          return getItem(storyId);
         }));
     }
     throw Exception('Nothing');
   }
 
   // after scroll to bottom we fetch more stories
-  Future<List<Story?>> getMoreStories(
+  Future<List<Item?>> getMoreStories(
       String type, int count, int skipCount) async {
     final http.Response response =
         await httpClient.get(Uri.parse(UrlHelper.urlStories(type)));
@@ -48,25 +48,25 @@ class ApiNetworkHelper {
         //we skip the current length of stories and take a new amount of stories
         return Future.wait(
             storyIds.skip(skipCount).take(count).map((dynamic storyId) {
-          return getStory(storyId);
+          return getItem(storyId);
         }));
     }
     throw Exception('Nothing');
   }
 
   // to get all the comments for a single story
-  Future<List<Story?>> getComments(Story? item) async {
-    List<Story?> test = <Story>[];
+  Future<List<Item?>> getComments(Item? item) async {
+    List<Item?> test = <Item>[];
     if (item!.kids!.isEmpty) {
-      return <Story>[];
+      return <Item>[];
     } else {
       //first we get the parent comments
-      final List<Story?> comments =
-          await Future.wait(item.kids!.map((int id) => getStory(id)));
+      final List<Item?> comments =
+          await Future.wait(item.kids!.map((int id) => getItem(id)));
       //then we get the comments inside parent comments and if there are
       // more comments nested we call again getComments()
-      final List<List<Story?>> nestedComments = await Future.wait(
-          comments.map((Story? comment) => getComments(comment)));
+      final List<List<Item?>> nestedComments = await Future.wait(
+          comments.map((Item? comment) => getComments(comment)));
       for (int i = 0; i < nestedComments.length; i++) {
         //we save all the nested comments in the list of comments that we have
         //inside each principal comment.

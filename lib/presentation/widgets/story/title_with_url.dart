@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 //My imports
-import 'package:hacker_news_clone/data/models/story.dart';
+import 'package:hacker_news_clone/data/models/item.dart';
 
 class TitleWithUrl extends StatelessWidget {
   const TitleWithUrl({Key? key, this.story}) : super(key: key);
 
-  final Story? story;
+  final Item? story;
   @override
   Widget build(BuildContext context) {
     String formattedUrl = ' ';

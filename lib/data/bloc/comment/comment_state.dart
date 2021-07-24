@@ -4,9 +4,9 @@ part of 'comment_bloc.dart';
 class CommentState {
   const CommentState({this.comments});
 
-  final List<Story?>? comments;
+  final List<Item?>? comments;
 
-  CommentState copyWith({List<Story?>? comments}) {
+  CommentState copyWith({List<Item?>? comments}) {
     return CommentState(comments: comments ?? this.comments);
   }
 }

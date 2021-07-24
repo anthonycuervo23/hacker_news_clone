@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 //My imports
-import 'package:hacker_news_clone/data/models/story.dart';
+import 'package:hacker_news_clone/data/models/item.dart';
 
 class HeaderWidget extends StatelessWidget {
   const HeaderWidget({Key? key, this.item}) : super(key: key);
 
-  final Story? item;
+  final Item? item;
 
   Future<void> launchURL(String url) async {
     if (await canLaunch(url)) {

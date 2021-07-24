@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 //My imports
-import 'package:hacker_news_clone/data/models/story.dart';
+import 'package:hacker_news_clone/data/models/item.dart';
 import 'package:hacker_news_clone/data/services/api_network.dart';
 import 'package:hacker_news_clone/presentation/widgets/comment/comment_item.dart';
 import 'package:hacker_news_clone/presentation/widgets/comment/header.dart';
 
 class CommentPage extends StatefulWidget {
   const CommentPage({Key? key, this.item}) : super(key: key);
-  final Story? item;
+  final Item? item;
 
   @override
   State<StatefulWidget> createState() {
@@ -20,12 +20,12 @@ class CommentPage extends StatefulWidget {
 
 class _CommentPageState extends State<CommentPage> {
   ApiNetworkHelper apiNetworkHelper = ApiNetworkHelper(http.Client());
-  Map<int, Story> comments = <int, Story>{};
+  Map<int, Item> comments = <int, Item>{};
 
-  Future<Story> getItemWithComments(int id) async {
-    List<Story?> test = <Story>[];
+  Future<Item> getItemWithComments(int id) async {
+    List<Item?> test = <Item>[];
     //here we get the parent comment
-    final Story? item = await apiNetworkHelper.getStory(id);
+    final Item? item = await apiNetworkHelper.getItem(id);
     //and then we get all the comments nested in the parent comment
     //and save then in a list
     test = await apiNetworkHelper.getComments(item);
@@ -61,22 +61,22 @@ class _CommentPageState extends State<CommentPage> {
                   return HeaderWidget(item: widget.item);
                 }
 
-                return FutureBuilder<Story>(
+                return FutureBuilder<Item>(
                     //here we get the parent comment with all the nested comments and because we are
                     //inside ListView.builder we do the same for all the parent comments inside the story
                     future:
                         getItemWithComments(widget.item!.kids![position - 1]),
                     builder:
-                        (BuildContext context, AsyncSnapshot<Story> snapshot) {
+                        (BuildContext context, AsyncSnapshot<Item> snapshot) {
                       if (comments[position - 1] != null) {
-                        final Story? item = comments[position - 1];
+                        final Item? item = comments[position - 1];
                         return CommentRow(
                           item: item,
                           key: Key(item!.id.toString()),
                         );
                       }
                       if (snapshot.hasData && snapshot.data != null) {
-                        final Story? item = snapshot.data;
+                        final Item? item = snapshot.data;
                         comments[position - 1] = item!;
                         return CommentRow(
                             item: item, key: Key(item.id.toString()));

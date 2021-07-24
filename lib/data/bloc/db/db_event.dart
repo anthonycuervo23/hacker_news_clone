@@ -8,5 +8,5 @@ class OnGetStoriesFromDB extends DbEvent {}
 class OnInsertReadStory extends DbEvent {
   OnInsertReadStory({this.story});
 
-  final Story? story;
+  final Item? story;
 }

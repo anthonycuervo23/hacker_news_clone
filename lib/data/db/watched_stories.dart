@@ -1,7 +1,7 @@
 import 'package:moor_flutter/moor_flutter.dart';
 
 //My imports
-import 'package:hacker_news_clone/data/models/story.dart';
+import 'package:hacker_news_clone/data/models/item.dart';
 
 part 'watched_stories.g.dart';
 
@@ -28,7 +28,7 @@ class MyDatabase extends _$MyDatabase {
   // loads all watchedStories entries
   Future<List<WatchedStorie>> get allStories => select(watchedStories).get();
 
-  void insertStory(Story story) {
+  void insertStory(Item story) {
     final WatchedStorie watchedStory =
         WatchedStorie(id: story.id, title: story.title!);
     into(watchedStories).insert(watchedStory);

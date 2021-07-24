@@ -4,11 +4,11 @@ import 'package:meta/meta.dart';
 
 //My imports
 import 'package:hacker_news_clone/data/utils/hacker_news_enum.dart';
-import 'package:hacker_news_clone/data/models/story.dart';
+import 'package:hacker_news_clone/data/models/item.dart';
 import 'package:hacker_news_clone/data/services/api_repository.dart';
 
-part 'stories_event.dart';
-part 'stories_state.dart';
+part 'story_event.dart';
+part 'story_state.dart';
 
 class StoriesBloc extends Bloc<StoriesEvent, StoriesState> {
   StoriesBloc(this.repo)
@@ -20,15 +20,15 @@ class StoriesBloc extends Bloc<StoriesEvent, StoriesState> {
     StoriesEvent event,
   ) async* {
     if (event is OnGetStories) {
-      final List<Story> filteredStories = <Story>[];
+      final List<Item> filteredStories = <Item>[];
       yield state.copyWith(status: NewsStatus.loading);
-      final List<Story?> stories = await repo.getStories(state.type, 20);
+      final List<Item?> stories = await repo.getStories(state.type, 20);
       if (stories.isEmpty) {
         yield state.copyWith(
             status: NewsStatus.error,
             message: 'Could not get stories, please try again');
       } else {
-        for (final Story? story in stories) {
+        for (final Item? story in stories) {
           if (story!.type == 'story') {
             filteredStories.add(story);
           }
@@ -41,14 +41,14 @@ class StoriesBloc extends Bloc<StoriesEvent, StoriesState> {
     }
     if (event is OnGetMoreStories) {
       yield state.copyWith(loadStoriesOnScroll: true);
-      final List<Story?> stories =
+      final List<Item?> stories =
           await repo.getMoreStories(state.type, 10, state.stories.length);
       if (stories.isEmpty) {
         yield state.copyWith(
             status: NewsStatus.error,
             message: 'Could not load more stories, please try again');
       } else {
-        for (final Story? story in stories) {
+        for (final Item? story in stories) {
           if (story!.descendants != null) {
             state.stories.add(story);
           }
@@ -65,7 +65,7 @@ class StoriesBloc extends Bloc<StoriesEvent, StoriesState> {
     }
   }
 
-  Future<Story?> getStoriesById(int id) async {
-    return repo.fetchStory(id);
+  Future<Item?> getStoriesById(int id) async {
+    return repo.fetchItem(id);
   }
 }
