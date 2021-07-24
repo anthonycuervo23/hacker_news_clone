@@ -10,18 +10,17 @@ import 'package:hacker_news_clone/data/services/api_repository.dart';
 part 'story_event.dart';
 part 'story_state.dart';
 
-class StoriesBloc extends Bloc<StoriesEvent, StoriesState> {
-  StoriesBloc(this.repo)
-      : super(const StoriesState(status: NewsStatus.initial));
+class StoryBloc extends Bloc<StoryEvent, StoryState> {
+  StoryBloc(this.repo) : super(const StoryState(status: NewsStatus.initial));
   final Repository repo;
 
   @override
-  Stream<StoriesState> mapEventToState(
-    StoriesEvent event,
+  Stream<StoryState> mapEventToState(
+    StoryEvent event,
   ) async* {
     if (event is OnGetStories) {
-      final List<Item> filteredStories = <Item>[];
       yield state.copyWith(status: NewsStatus.loading);
+      final List<Item> filteredStories = <Item>[];
       final List<Item?> stories = await repo.getStories(state.type, 20);
       if (stories.isEmpty) {
         yield state.copyWith(
@@ -38,8 +37,7 @@ class StoriesBloc extends Bloc<StoriesEvent, StoriesState> {
           status: NewsStatus.loaded,
         );
       }
-    }
-    if (event is OnGetMoreStories) {
+    } else if (event is OnGetMoreStories) {
       yield state.copyWith(loadStoriesOnScroll: true);
       final List<Item?> stories =
           await repo.getMoreStories(state.type, 10, state.stories.length);
@@ -56,8 +54,7 @@ class StoriesBloc extends Bloc<StoriesEvent, StoriesState> {
         yield state.copyWith(
             stories: state.stories, loadStoriesOnScroll: false);
       }
-    }
-    if (event is OnSelectedTab) {
+    } else if (event is OnSelectedTab) {
       yield state.copyWith(
         type: event.type,
         storiesName: event.storiesName,

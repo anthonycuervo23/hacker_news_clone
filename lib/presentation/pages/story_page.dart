@@ -30,7 +30,7 @@ class _HomePageState extends State<HomePage>
     super.initState();
   }
 
-  void openBottomSheet(StoriesBloc bloc) {
+  void openBottomSheet(StoryBloc bloc) {
     showModalBottomSheet<Widget>(
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
@@ -128,10 +128,10 @@ class _HomePageState extends State<HomePage>
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: <BlocProvider<dynamic>>[
-        BlocProvider<StoriesBloc>(
+        BlocProvider<StoryBloc>(
           create: (_) {
-            final StoriesBloc bloc =
-                StoriesBloc(RepositoryProvider.of<Repository>(context));
+            final StoryBloc bloc =
+                StoryBloc(RepositoryProvider.of<Repository>(context));
             bloc.add(OnGetStories());
             return bloc;
           },
@@ -144,9 +144,9 @@ class _HomePageState extends State<HomePage>
           },
         )
       ],
-      child: BlocBuilder<StoriesBloc, StoriesState>(
-        builder: (BuildContext context, StoriesState storyState) {
-          final StoriesBloc storyBloc = BlocProvider.of<StoriesBloc>(context);
+      child: BlocBuilder<StoryBloc, StoryState>(
+        builder: (BuildContext context, StoryState storyState) {
+          final StoryBloc storyBloc = BlocProvider.of<StoryBloc>(context);
           return BlocBuilder<DbBloc, DbState>(
               builder: (BuildContext context, DbState dbState) {
             final DbBloc dbBloc = BlocProvider.of<DbBloc>(context);
@@ -236,15 +236,15 @@ class _HomePageState extends State<HomePage>
   }
 
   Widget _buildStoriesList(
-      BuildContext context, StoriesBloc bloc, DbBloc dbBloc) {
-    return BlocConsumer<StoriesBloc, StoriesState>(
-      listener: (BuildContext context, StoriesState state) {
+      BuildContext context, StoryBloc bloc, DbBloc dbBloc) {
+    return BlocConsumer<StoryBloc, StoryState>(
+      listener: (BuildContext context, StoryState state) {
         if (state.status == NewsStatus.error) {
           ScaffoldMessenger.of(context)
               .showSnackBar(SnackBar(content: Text(state.message!)));
         }
       },
-      builder: (BuildContext context, StoriesState state) {
+      builder: (BuildContext context, StoryState state) {
         if (state.status == NewsStatus.error) {
           return Center(
             child: Text(state.message!),

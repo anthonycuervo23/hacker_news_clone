@@ -1,17 +1,17 @@
 part of 'story_bloc.dart';
 
 @immutable
-abstract class StoriesEvent {}
+abstract class StoryEvent {}
 
-class OnGetStories extends StoriesEvent {}
+class OnGetStories extends StoryEvent {}
 
-class OnGetMoreStories extends StoriesEvent {}
+class OnGetMoreStories extends StoryEvent {}
 
-class OnSelectedTab extends StoriesEvent {
+class OnSelectedTab extends StoryEvent {
   OnSelectedTab({this.type, this.storiesName});
 
   final String? type;
   final String? storiesName;
 }
 
-class OnRefresh extends StoriesEvent {}
+class OnRefresh extends StoryEvent {}

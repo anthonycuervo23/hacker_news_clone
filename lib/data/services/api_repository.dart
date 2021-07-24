@@ -23,4 +23,8 @@ class Repository {
       String type, int count, int skipCount) async {
     return apiNetworkHelper.getMoreStories(type, count, skipCount);
   }
+
+  Future<List<Item?>> getComments(Item? item) async {
+    return apiNetworkHelper.getComments(item);
+  }
 }

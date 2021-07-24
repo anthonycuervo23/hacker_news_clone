@@ -1,8 +1,8 @@
 part of 'story_bloc.dart';
 
 @immutable
-class StoriesState {
-  const StoriesState(
+class StoryState {
+  const StoryState(
       {required this.status,
       this.type = 'topstories',
       this.storiesName = 'Top Stories',
@@ -19,7 +19,7 @@ class StoriesState {
   final String? message;
   final String storiesName;
 
-  StoriesState copyWith(
+  StoryState copyWith(
       {NewsStatus? status,
       String? type,
       List<Item?>? stories,
@@ -27,7 +27,7 @@ class StoriesState {
       bool? loadStoriesOnScroll,
       List<int>? ids,
       String? message}) {
-    return StoriesState(
+    return StoryState(
       status: status ?? this.status,
       type: type ?? this.type,
       stories: stories ?? this.stories,
