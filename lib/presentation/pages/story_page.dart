@@ -1,6 +1,7 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hacker_news_clone/presentation/pages/settings_page.dart';
 import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
 
 //My imports
@@ -223,6 +224,10 @@ class _HomePageState extends State<HomePage>
                               .withOpacity(0.8),
                         ),
                         onPressed: () {
+                          Navigator.push<dynamic>(
+                              context,
+                              MaterialPageRoute<dynamic>(
+                                  builder: (_) => const SettingsPage()));
                           //ADD AN OPTION TO CHANGE THE THEME OF THE APP
                         }),
                   ],
