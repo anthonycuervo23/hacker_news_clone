@@ -9,19 +9,19 @@ class Repository {
   final ApiNetworkHelper apiNetworkHelper = ApiNetworkHelper(http.Client());
 
   Future<Item?> fetchItem(int id) async {
-    final Item? story = await apiNetworkHelper.getItem(id);
-    if (story != null) {
-      return story;
+    final Item? item = await apiNetworkHelper.getItem(id);
+    if (item != null) {
+      return item;
     }
   }
 
-  Future<List<Item?>> getStories(String type, int count) async {
-    return apiNetworkHelper.getStories(type, count);
+  Future<List<Item?>> getItems(String type, int count) async {
+    return apiNetworkHelper.getItems(type, count);
   }
 
-  Future<List<Item?>> getMoreStories(
+  Future<List<Item?>> getMoreItems(
       String type, int count, int skipCount) async {
-    return apiNetworkHelper.getMoreStories(type, count, skipCount);
+    return apiNetworkHelper.getMoreItems(type, count, skipCount);
   }
 
   Future<List<Item?>> getComments(Item? item) async {

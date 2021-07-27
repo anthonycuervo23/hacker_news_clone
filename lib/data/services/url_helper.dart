@@ -1,9 +1,9 @@
 class UrlHelper {
-  static String urlForStory(dynamic storyId) {
-    return 'https://hacker-news.firebaseio.com/v0/item/$storyId.json';
+  static String urlForItem(dynamic itemId) {
+    return 'https://hacker-news.firebaseio.com/v0/item/$itemId.json';
   }
 
-  static String urlStories(String page) {
+  static String urlItems(String page) {
     return 'https://hacker-news.firebaseio.com/v0/$page.json';
   }
 }

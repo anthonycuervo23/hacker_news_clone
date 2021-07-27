@@ -1,17 +1,17 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hacker_news_clone/presentation/pages/settings_page.dart';
 import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
 
 //My imports
-import 'package:hacker_news_clone/presentation/widgets/story/story_item.dart';
+import 'package:hacker_news_clone/presentation/pages/settings_page.dart';
+import 'package:hacker_news_clone/presentation/widgets/item/item_container.dart';
 import 'package:hacker_news_clone/data/bloc/db/db_bloc.dart';
-import 'package:hacker_news_clone/data/bloc/story/story_bloc.dart';
-import 'package:hacker_news_clone/data/db/watched_stories.dart';
+import 'package:hacker_news_clone/data/bloc/item/item_bloc.dart';
+import 'package:hacker_news_clone/data/db/watched_items.dart';
 import 'package:hacker_news_clone/data/utils/hacker_news_enum.dart';
 import 'package:hacker_news_clone/data/services/api_repository.dart';
-import 'package:hacker_news_clone/presentation/widgets/story/loading_container.dart';
+import 'package:hacker_news_clone/presentation/widgets/item/loading_container.dart';
 import 'package:hacker_news_clone/data/models/item.dart';
 
 class HomePage extends StatefulWidget {
@@ -31,7 +31,7 @@ class _HomePageState extends State<HomePage>
     super.initState();
   }
 
-  void openBottomSheet(StoryBloc bloc) {
+  void openBottomSheet(ItemBloc bloc) {
     showModalBottomSheet<Widget>(
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
@@ -73,20 +73,20 @@ class _HomePageState extends State<HomePage>
                       return ListTile(
                         onTap: () {
                           if (listArticlePages[index].name! ==
-                              bloc.state.storiesName) {
+                              bloc.state.itemsName) {
                             return;
                           }
                           Navigator.of(context).pop();
                           bloc.add(OnSelectedTab(
                               type: listArticlePages[index].urlType,
-                              storiesName: listArticlePages[index].name));
-                          bloc.add(OnGetStories());
+                              itemsName: listArticlePages[index].name));
+                          bloc.add(OnGetItems());
                         },
                         leading: Icon(
                           Icons.article_outlined,
                           color: listArticlePages[index]
                                   .name!
-                                  .compareTo(bloc.state.storiesName)
+                                  .compareTo(bloc.state.itemsName)
                                   .isEven
                               ? Theme.of(context).accentColor.withOpacity(0.9)
                               : Theme.of(context).hintColor,
@@ -96,7 +96,7 @@ class _HomePageState extends State<HomePage>
                           style: TextStyle(
                               color: listArticlePages[index]
                                       .name!
-                                      .compareTo(bloc.state.storiesName)
+                                      .compareTo(bloc.state.itemsName)
                                       .isEven
                                   ? Theme.of(context)
                                       .accentColor
@@ -110,7 +110,7 @@ class _HomePageState extends State<HomePage>
                         trailing: Visibility(
                           visible: listArticlePages[index]
                               .name!
-                              .compareTo(bloc.state.storiesName)
+                              .compareTo(bloc.state.itemsName)
                               .isOdd,
                           child: Icon(Icons.keyboard_arrow_right,
                               color: Theme.of(context).hintColor),
@@ -129,25 +129,25 @@ class _HomePageState extends State<HomePage>
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: <BlocProvider<dynamic>>[
-        BlocProvider<StoryBloc>(
+        BlocProvider<ItemBloc>(
           create: (_) {
-            final StoryBloc bloc =
-                StoryBloc(RepositoryProvider.of<Repository>(context));
-            bloc.add(OnGetStories());
+            final ItemBloc bloc =
+                ItemBloc(RepositoryProvider.of<Repository>(context));
+            bloc.add(OnGetItems());
             return bloc;
           },
         ),
         BlocProvider<DbBloc>(
           create: (_) {
             final DbBloc bloc = DbBloc(MyDatabase());
-            bloc.add(OnGetStoriesFromDB());
+            bloc.add(OnGetItemsFromDB());
             return bloc;
           },
         )
       ],
-      child: BlocBuilder<StoryBloc, StoryState>(
-        builder: (BuildContext context, StoryState storyState) {
-          final StoryBloc storyBloc = BlocProvider.of<StoryBloc>(context);
+      child: BlocBuilder<ItemBloc, ItemState>(
+        builder: (BuildContext context, ItemState itemState) {
+          final ItemBloc itemBloc = BlocProvider.of<ItemBloc>(context);
           return BlocBuilder<DbBloc, DbState>(
               builder: (BuildContext context, DbState dbState) {
             final DbBloc dbBloc = BlocProvider.of<DbBloc>(context);
@@ -169,7 +169,7 @@ class _HomePageState extends State<HomePage>
                             fontWeight: FontWeight.w700),
                       ),
                       TextSpan(
-                        text: storyState.storiesName,
+                        text: itemState.itemsName,
                         style: TextStyle(
                             color: Theme.of(context).hintColor,
                             fontSize: 20,
@@ -180,7 +180,7 @@ class _HomePageState extends State<HomePage>
                 ),
                 elevation: 0,
               ),
-              body: _buildStoriesList(context, storyBloc, dbBloc),
+              body: _buildItemsList(context, itemBloc, dbBloc),
               bottomNavigationBar: BottomAppBar(
                   child: Padding(
                 padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
@@ -199,8 +199,8 @@ class _HomePageState extends State<HomePage>
                         onPressed: () {
                           //START ANIMATION
                           // setState(() {});
-                          dbBloc.add(OnGetStoriesFromDB());
-                          storyBloc.add(OnGetStories());
+                          dbBloc.add(OnGetItemsFromDB());
+                          itemBloc.add(OnGetItems());
                         }),
                     IconButton(
                         icon: Icon(
@@ -212,7 +212,7 @@ class _HomePageState extends State<HomePage>
                               .withOpacity(0.8),
                         ),
                         onPressed: () {
-                          openBottomSheet(storyBloc);
+                          openBottomSheet(itemBloc);
                         }),
                     IconButton(
                         icon: Icon(
@@ -240,16 +240,15 @@ class _HomePageState extends State<HomePage>
     );
   }
 
-  Widget _buildStoriesList(
-      BuildContext context, StoryBloc bloc, DbBloc dbBloc) {
-    return BlocConsumer<StoryBloc, StoryState>(
-      listener: (BuildContext context, StoryState state) {
+  Widget _buildItemsList(BuildContext context, ItemBloc bloc, DbBloc dbBloc) {
+    return BlocConsumer<ItemBloc, ItemState>(
+      listener: (BuildContext context, ItemState state) {
         if (state.status == NewsStatus.error) {
           ScaffoldMessenger.of(context)
               .showSnackBar(SnackBar(content: Text(state.message!)));
         }
       },
-      builder: (BuildContext context, StoryState state) {
+      builder: (BuildContext context, ItemState state) {
         if (state.status == NewsStatus.error) {
           return Center(
             child: Text(state.message!),
@@ -263,11 +262,11 @@ class _HomePageState extends State<HomePage>
                   key: UniqueKey(),
                 )
               : LazyLoadScrollView(
-                  onEndOfPage: () => bloc.add(OnGetMoreStories()),
-                  isLoading: state.loadStoriesOnScroll,
+                  onEndOfPage: () => bloc.add(OnGetMoreItems()),
+                  isLoading: state.loadItemsOnScroll,
                   child: RefreshIndicator(
                     onRefresh: () async {
-                      bloc.add(OnGetStories());
+                      bloc.add(OnGetItems());
                     },
                     child: ListView(
                       physics: const AlwaysScrollableScrollPhysics(),
@@ -277,30 +276,30 @@ class _HomePageState extends State<HomePage>
                               const Divider(),
                           physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
-                          itemCount: state.stories.length,
+                          itemCount: state.items.length,
                           itemBuilder: (BuildContext context, int index) {
-                            //print('Item id ${state.stories[index]} and $index');
+                            //print('Item id ${state.items[index]} and $index');
                             final Item item = Item((ItemBuilder b) => b
-                              ..id = state.stories[index]!.id
-                              ..title = state.stories[index]!.title
-                              ..deleted = state.stories[index]!.deleted
+                              ..id = state.items[index]!.id
+                              ..title = state.items[index]!.title
+                              ..deleted = state.items[index]!.deleted
                               ..kids.update((ListBuilder<int> b) =>
-                                  b..addAll(state.stories[index]!.kids!))
-                              ..url = state.stories[index]!.url
-                              ..score = state.stories[index]!.score
-                              ..descendants = state.stories[index]!.descendants
-                              ..time = state.stories[index]!.time
-                              ..type = state.stories[index]!.type
-                              ..by = state.stories[index]!.by
+                                  b..addAll(state.items[index]!.kids!))
+                              ..url = state.items[index]!.url
+                              ..score = state.items[index]!.score
+                              ..descendants = state.items[index]!.descendants
+                              ..time = state.items[index]!.time
+                              ..type = state.items[index]!.type
+                              ..by = state.items[index]!.by
                               ..seen = dbBloc.state.listIdsRead!
-                                      .contains(state.stories[index]!.id) ||
+                                      .contains(state.items[index]!.id) ||
                                   false);
                             return NewsItem(
                                 key: UniqueKey(), item: item, counter: index);
                           },
                         ),
                         Visibility(
-                          visible: state.loadStoriesOnScroll,
+                          visible: state.loadItemsOnScroll,
                           child: Align(
                             alignment: Alignment.bottomCenter,
                             child: PreferredSize(

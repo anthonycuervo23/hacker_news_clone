@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+//My imports
 import 'package:hacker_news_clone/presentation/theme/theme.dart';
 import 'package:hacker_news_clone/presentation/widgets/settings/info_page.dart';
-import 'package:provider/provider.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);

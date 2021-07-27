@@ -3,10 +3,10 @@ part of 'db_bloc.dart';
 @immutable
 abstract class DbEvent {}
 
-class OnGetStoriesFromDB extends DbEvent {}
+class OnGetItemsFromDB extends DbEvent {}
 
-class OnInsertReadStory extends DbEvent {
-  OnInsertReadStory({this.story});
+class OnInsertReadItem extends DbEvent {
+  OnInsertReadItem({this.item});
 
-  final Item? story;
+  final Item? item;
 }

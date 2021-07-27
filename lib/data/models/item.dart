@@ -72,7 +72,7 @@ abstract class Item implements Built<Item, ItemBuilder> {
     return serializers.deserializeWith(Item.serializer, parsed);
   }
 
-  static List<int> parseStoriesId(String jsonString) {
+  static List<int> parseItemsId(String jsonString) {
     final dynamic parsed = jsonDecode(jsonString);
     if (parsed is Iterable && parsed != null) {
       final List<int> listOfIds = List<int>.from(parsed).take(10).toList();

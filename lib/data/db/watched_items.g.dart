@@ -1,21 +1,20 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'watched_stories.dart';
+part of 'watched_items.dart';
 
 // **************************************************************************
 // MoorGenerator
 // **************************************************************************
 
 // ignore_for_file: unnecessary_brace_in_string_interps, unnecessary_this
-class WatchedStorie extends DataClass implements Insertable<WatchedStorie> {
+class WatchedItem extends DataClass implements Insertable<WatchedItem> {
   final int id;
   final String title;
-  WatchedStorie({required this.id, required this.title});
-  factory WatchedStorie.fromData(
-      Map<String, dynamic> data, GeneratedDatabase db,
+  WatchedItem({required this.id, required this.title});
+  factory WatchedItem.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String? prefix}) {
     final effectivePrefix = prefix ?? '';
-    return WatchedStorie(
+    return WatchedItem(
       id: const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
       title: const StringType()
@@ -30,17 +29,17 @@ class WatchedStorie extends DataClass implements Insertable<WatchedStorie> {
     return map;
   }
 
-  WatchedStoriesCompanion toCompanion(bool nullToAbsent) {
-    return WatchedStoriesCompanion(
+  WatchedItemsCompanion toCompanion(bool nullToAbsent) {
+    return WatchedItemsCompanion(
       id: Value(id),
       title: Value(title),
     );
   }
 
-  factory WatchedStorie.fromJson(Map<String, dynamic> json,
+  factory WatchedItem.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
     serializer ??= moorRuntimeOptions.defaultSerializer;
-    return WatchedStorie(
+    return WatchedItem(
       id: serializer.fromJson<int>(json['id']),
       title: serializer.fromJson<String>(json['title']),
     );
@@ -54,13 +53,13 @@ class WatchedStorie extends DataClass implements Insertable<WatchedStorie> {
     };
   }
 
-  WatchedStorie copyWith({int? id, String? title}) => WatchedStorie(
+  WatchedItem copyWith({int? id, String? title}) => WatchedItem(
         id: id ?? this.id,
         title: title ?? this.title,
       );
   @override
   String toString() {
-    return (StringBuffer('WatchedStorie(')
+    return (StringBuffer('WatchedItem(')
           ..write('id: $id, ')
           ..write('title: $title')
           ..write(')'))
@@ -72,23 +71,23 @@ class WatchedStorie extends DataClass implements Insertable<WatchedStorie> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is WatchedStorie &&
+      (other is WatchedItem &&
           other.id == this.id &&
           other.title == this.title);
 }
 
-class WatchedStoriesCompanion extends UpdateCompanion<WatchedStorie> {
+class WatchedItemsCompanion extends UpdateCompanion<WatchedItem> {
   final Value<int> id;
   final Value<String> title;
-  const WatchedStoriesCompanion({
+  const WatchedItemsCompanion({
     this.id = const Value.absent(),
     this.title = const Value.absent(),
   });
-  WatchedStoriesCompanion.insert({
+  WatchedItemsCompanion.insert({
     this.id = const Value.absent(),
     required String title,
   }) : title = Value(title);
-  static Insertable<WatchedStorie> custom({
+  static Insertable<WatchedItem> custom({
     Expression<int>? id,
     Expression<String>? title,
   }) {
@@ -98,8 +97,8 @@ class WatchedStoriesCompanion extends UpdateCompanion<WatchedStorie> {
     });
   }
 
-  WatchedStoriesCompanion copyWith({Value<int>? id, Value<String>? title}) {
-    return WatchedStoriesCompanion(
+  WatchedItemsCompanion copyWith({Value<int>? id, Value<String>? title}) {
+    return WatchedItemsCompanion(
       id: id ?? this.id,
       title: title ?? this.title,
     );
@@ -119,7 +118,7 @@ class WatchedStoriesCompanion extends UpdateCompanion<WatchedStorie> {
 
   @override
   String toString() {
-    return (StringBuffer('WatchedStoriesCompanion(')
+    return (StringBuffer('WatchedItemsCompanion(')
           ..write('id: $id, ')
           ..write('title: $title')
           ..write(')'))
@@ -127,11 +126,11 @@ class WatchedStoriesCompanion extends UpdateCompanion<WatchedStorie> {
   }
 }
 
-class $WatchedStoriesTable extends WatchedStories
-    with TableInfo<$WatchedStoriesTable, WatchedStorie> {
+class $WatchedItemsTable extends WatchedItems
+    with TableInfo<$WatchedItemsTable, WatchedItem> {
   final GeneratedDatabase _db;
   final String? _alias;
-  $WatchedStoriesTable(this._db, [this._alias]);
+  $WatchedItemsTable(this._db, [this._alias]);
   final VerificationMeta _idMeta = const VerificationMeta('id');
   late final GeneratedColumn<int?> id = GeneratedColumn<int?>(
       'id', aliasedName, false,
@@ -145,11 +144,11 @@ class $WatchedStoriesTable extends WatchedStories
   @override
   List<GeneratedColumn> get $columns => [id, title];
   @override
-  String get aliasedName => _alias ?? 'watched_stories';
+  String get aliasedName => _alias ?? 'watched_items';
   @override
-  String get actualTableName => 'watched_stories';
+  String get actualTableName => 'watched_items';
   @override
-  VerificationContext validateIntegrity(Insertable<WatchedStorie> instance,
+  VerificationContext validateIntegrity(Insertable<WatchedItem> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
@@ -168,22 +167,22 @@ class $WatchedStoriesTable extends WatchedStories
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  WatchedStorie map(Map<String, dynamic> data, {String? tablePrefix}) {
-    return WatchedStorie.fromData(data, _db,
+  WatchedItem map(Map<String, dynamic> data, {String? tablePrefix}) {
+    return WatchedItem.fromData(data, _db,
         prefix: tablePrefix != null ? '$tablePrefix.' : null);
   }
 
   @override
-  $WatchedStoriesTable createAlias(String alias) {
-    return $WatchedStoriesTable(_db, alias);
+  $WatchedItemsTable createAlias(String alias) {
+    return $WatchedItemsTable(_db, alias);
   }
 }
 
 abstract class _$MyDatabase extends GeneratedDatabase {
   _$MyDatabase(QueryExecutor e) : super(SqlTypeSystem.defaultInstance, e);
-  late final $WatchedStoriesTable watchedStories = $WatchedStoriesTable(this);
+  late final $WatchedItemsTable watchedItems = $WatchedItemsTable(this);
   @override
   Iterable<TableInfo> get allTables => allSchemaEntities.whereType<TableInfo>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities => [watchedStories];
+  List<DatabaseSchemaEntity> get allSchemaEntities => [watchedItems];
 }

@@ -4,15 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:hacker_news_clone/data/models/item.dart';
 
 class TitleWithUrl extends StatelessWidget {
-  const TitleWithUrl({Key? key, this.story}) : super(key: key);
+  const TitleWithUrl({Key? key, this.item}) : super(key: key);
 
-  final Item? story;
+  final Item? item;
   @override
   Widget build(BuildContext context) {
     String formattedUrl = ' ';
 
-    if (story!.url != null) {
-      formattedUrl = Uri.parse(story!.url!).host;
+    if (item!.url != null) {
+      formattedUrl = Uri.parse(item!.url!).host;
     }
 
     return Container(
@@ -20,10 +20,10 @@ class TitleWithUrl extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          Text(story!.title!,
+          Text(item!.title!,
               style: TextStyle(
                 fontSize: 20,
-                color: story!.seen!
+                color: item!.seen!
                     ? Theme.of(context).disabledColor
                     : Theme.of(context).textTheme.headline6!.color!,
               )),
@@ -31,12 +31,12 @@ class TitleWithUrl extends StatelessWidget {
             height: 10,
           ),
           Visibility(
-            visible: story!.url != null,
+            visible: item!.url != null,
             child: Text(formattedUrl,
                 maxLines: 2,
                 style: TextStyle(
                   fontSize: 12.5,
-                  color: story!.seen!
+                  color: item!.seen!
                       ? Theme.of(context).accentColor.withOpacity(0.3)
                       : Theme.of(context).accentColor.withOpacity(0.9),
                 )),

@@ -6,8 +6,8 @@ import 'package:url_launcher/url_launcher.dart';
 //My imports
 import 'package:hacker_news_clone/data/bloc/db/db_bloc.dart';
 import 'package:hacker_news_clone/data/models/item.dart';
-import 'package:hacker_news_clone/presentation/widgets/story/info_with_buttons.dart';
-import 'package:hacker_news_clone/presentation/widgets/story/title_with_url.dart';
+import 'package:hacker_news_clone/presentation/widgets/item/info_with_buttons.dart';
+import 'package:hacker_news_clone/presentation/widgets/item/title_with_url.dart';
 
 class NewsItem extends StatefulWidget {
   const NewsItem({Key? key, required this.item, this.counter})
@@ -39,8 +39,8 @@ class _NewsItemState extends State<NewsItem> {
 
           //DB
           if (!widget.item!.seen!) {
-            dbBloc.add(OnInsertReadStory(story: widget.item));
-            dbBloc.add(OnGetStoriesFromDB());
+            dbBloc.add(OnInsertReadItem(item: widget.item));
+            dbBloc.add(OnGetItemsFromDB());
           }
         } else {
           // IF ASK/SHOW HN
@@ -49,8 +49,8 @@ class _NewsItemState extends State<NewsItem> {
 
           //DB
           if (!widget.item!.seen!) {
-            dbBloc.add(OnInsertReadStory(story: widget.item));
-            dbBloc.add(OnGetStoriesFromDB());
+            dbBloc.add(OnInsertReadItem(item: widget.item));
+            dbBloc.add(OnGetItemsFromDB());
           }
         }
       },
@@ -60,12 +60,12 @@ class _NewsItemState extends State<NewsItem> {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             TitleWithUrl(
-              story: widget.item,
+              item: widget.item,
               //isWatched: isWatched,
             ),
             InfoWithButtons(
               counter: widget.counter,
-              story: widget.item,
+              item: widget.item,
               launchBrowser: _launchBrowser,
               //isWatched: isWatched,
             ),

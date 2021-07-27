@@ -22,29 +22,29 @@ class CommentPage extends StatefulWidget {
 class _CommentPageState extends State<CommentPage> {
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<CommentBloc>(
-      create: (BuildContext context) =>
-          CommentBloc(RepositoryProvider.of<Repository>(context)),
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text('Comments (${widget.item!.descendants})'),
-        ),
-        body: (widget.item!.kids!.isEmpty)
-            ? ListView(
-                children: <Widget>[
-                  HeaderWidget(item: widget.item),
-                  Container(
-                    padding: const EdgeInsets.all(32.0),
-                    child: const Center(
-                      child: Text('There are no comments available',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontWeight: FontWeight.w500, fontSize: 17.0)),
-                    ),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Comments (${widget.item!.descendants})'),
+      ),
+      body: (widget.item!.kids!.isEmpty)
+          ? ListView(
+              children: <Widget>[
+                HeaderWidget(item: widget.item),
+                Container(
+                  padding: const EdgeInsets.all(32.0),
+                  child: const Center(
+                    child: Text('There are no comments available',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500, fontSize: 17.0)),
                   ),
-                ],
-              )
-            : ListView.builder(
+                ),
+              ],
+            )
+          : BlocProvider<CommentBloc>(
+              create: (BuildContext context) =>
+                  CommentBloc(RepositoryProvider.of<Repository>(context)),
+              child: ListView.builder(
                 itemCount: 1 + widget.item!.kids!.length,
                 itemBuilder: (BuildContext context, int position) {
                   if (position == 0) {
@@ -81,7 +81,7 @@ class _CommentPageState extends State<CommentPage> {
                       });
                 },
               ),
-      ),
+            ),
     );
   }
 }

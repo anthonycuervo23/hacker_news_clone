@@ -13,7 +13,7 @@ class ApiNetworkHelper {
   //We get one story or comment
   Future<Item?> getItem(dynamic id) async {
     final http.Response response =
-        await httpClient.get(Uri.parse(UrlHelper.urlForStory(id)));
+        await httpClient.get(Uri.parse(UrlHelper.urlForItem(id)));
 
     if (response.statusCode == 200) {
       return Item.fromJson(response.body);
@@ -23,32 +23,32 @@ class ApiNetworkHelper {
   }
 
   // we get a list of stories ids from the selected type (top, best, news...)
-  Future<List<Item?>> getStories(String type, int count) async {
+  Future<List<Item?>> getItems(String type, int count) async {
     final http.Response response =
-        await httpClient.get(Uri.parse(UrlHelper.urlStories(type)));
+        await httpClient.get(Uri.parse(UrlHelper.urlItems(type)));
     if (response.statusCode == 200) {
-      final dynamic storyIds = jsonDecode(response.body);
-      if (storyIds is Iterable && storyIds != null)
+      final dynamic itemsIds = jsonDecode(response.body);
+      if (itemsIds is Iterable && itemsIds != null)
         //we take just a certain amount of stories to retrieve
-        return Future.wait(storyIds.take(count).map((dynamic storyId) {
-          return getItem(storyId);
+        return Future.wait(itemsIds.take(count).map((dynamic itemId) {
+          return getItem(itemId);
         }));
     }
     throw Exception('Nothing');
   }
 
   // after scroll to bottom we fetch more stories
-  Future<List<Item?>> getMoreStories(
+  Future<List<Item?>> getMoreItems(
       String type, int count, int skipCount) async {
     final http.Response response =
-        await httpClient.get(Uri.parse(UrlHelper.urlStories(type)));
+        await httpClient.get(Uri.parse(UrlHelper.urlItems(type)));
     if (response.statusCode == 200) {
-      final dynamic storyIds = jsonDecode(response.body);
-      if (storyIds is Iterable && storyIds != null)
+      final dynamic itemIds = jsonDecode(response.body);
+      if (itemIds is Iterable && itemIds != null)
         //we skip the current length of stories and take a new amount of stories
         return Future.wait(
-            storyIds.skip(skipCount).take(count).map((dynamic storyId) {
-          return getItem(storyId);
+            itemIds.skip(skipCount).take(count).map((dynamic itemId) {
+          return getItem(itemId);
         }));
     }
     throw Exception('Nothing');
@@ -56,7 +56,7 @@ class ApiNetworkHelper {
 
   // to get all the comments for a single story
   Future<List<Item?>> getComments(Item? item) async {
-    List<Item?> test = <Item>[];
+    List<Item?> nestedCommentsList = <Item>[];
     if (item!.kids!.isEmpty) {
       return <Item>[];
     } else {
@@ -70,8 +70,8 @@ class ApiNetworkHelper {
       for (int i = 0; i < nestedComments.length; i++) {
         //we save all the nested comments in the list of comments that we have
         //inside each principal comment.
-        test = nestedComments[i];
-        comments[i]!.comments!.addAll(test);
+        nestedCommentsList = nestedComments[i];
+        comments[i]!.comments!.addAll(nestedCommentsList);
       }
       return comments;
     }

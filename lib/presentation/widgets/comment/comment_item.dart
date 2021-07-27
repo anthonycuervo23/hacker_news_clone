@@ -11,6 +11,7 @@ class CommentRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // final CommentBloc bloc = BlocProvider.of<CommentBloc>(context);
     final List<Widget> children = <Widget>[];
     children.add(
       CommentItem(
