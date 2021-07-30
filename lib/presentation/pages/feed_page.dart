@@ -1,6 +1,8 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hacker_news_clone/data/utils/bottom_sheet_utils.dart';
+import 'package:hacker_news_clone/presentation/widgets/common/appbar.dart';
 import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
 
 //My imports
@@ -31,102 +33,9 @@ class _HomePageState extends State<HomePage>
     super.initState();
   }
 
-  void openBottomSheet(ItemBloc bloc) {
-    showModalBottomSheet<Widget>(
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0)),
-        ),
-        isScrollControlled: true,
-        context: context,
-        builder: (BuildContext bc) {
-          return Wrap(children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0, 12, 0, 12),
-              child: Column(
-                children: <Widget>[
-                  Center(
-                    child: ListTile(
-                      title: const Text(
-                        'Hacker News Reader', //
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 17.5,
-                        ),
-                      ),
-                      subtitle: Text(
-                        'news.ycombinator.com',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 15, color: Theme.of(context).hintColor),
-                      ),
-                    ),
-                  ),
-                  const Divider(),
-                  ListView.separated(
-                    separatorBuilder: (BuildContext context, int index) =>
-                        const Divider(),
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: listArticlePages.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return ListTile(
-                        onTap: () {
-                          if (listArticlePages[index].name! ==
-                              bloc.state.itemsName) {
-                            return;
-                          }
-                          Navigator.of(context).pop();
-                          bloc.add(OnSelectedTab(
-                              type: listArticlePages[index].urlType,
-                              itemsName: listArticlePages[index].name));
-                          bloc.add(OnGetItems());
-                        },
-                        leading: Icon(
-                          Icons.article_outlined,
-                          color: listArticlePages[index]
-                                  .name!
-                                  .compareTo(bloc.state.itemsName)
-                                  .isEven
-                              ? Theme.of(context).accentColor.withOpacity(0.9)
-                              : Theme.of(context).hintColor,
-                        ),
-                        title: Text(
-                          listArticlePages[index].name!,
-                          style: TextStyle(
-                              color: listArticlePages[index]
-                                      .name!
-                                      .compareTo(bloc.state.itemsName)
-                                      .isEven
-                                  ? Theme.of(context)
-                                      .accentColor
-                                      .withOpacity(0.9)
-                                  : Theme.of(context)
-                                      .textTheme
-                                      .headline6!
-                                      .color,
-                              fontSize: 17),
-                        ),
-                        trailing: Visibility(
-                          visible: listArticlePages[index]
-                              .name!
-                              .compareTo(bloc.state.itemsName)
-                              .isOdd,
-                          child: Icon(Icons.keyboard_arrow_right,
-                              color: Theme.of(context).hintColor),
-                        ),
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ]);
-        });
-  }
-
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return MultiBlocProvider(
       providers: <BlocProvider<dynamic>>[
         BlocProvider<ItemBloc>(
@@ -153,33 +62,7 @@ class _HomePageState extends State<HomePage>
             final DbBloc dbBloc = BlocProvider.of<DbBloc>(context);
 
             return Scaffold(
-              appBar: AppBar(
-                title: RichText(
-                  text: TextSpan(
-                    children: <TextSpan>[
-                      TextSpan(
-                        text: 'HN  ',
-                        style: TextStyle(
-                            color: Theme.of(context)
-                                .textTheme
-                                .headline6!
-                                .color!
-                                .withOpacity(0.9),
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700),
-                      ),
-                      TextSpan(
-                        text: itemState.itemsName,
-                        style: TextStyle(
-                            color: Theme.of(context).hintColor,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600),
-                      ),
-                    ],
-                  ),
-                ),
-                elevation: 0,
-              ),
+              appBar: const HNAppBar(),
               body: _buildItemsList(context, itemBloc, dbBloc),
               bottomNavigationBar: BottomAppBar(
                   child: Padding(
@@ -212,7 +95,10 @@ class _HomePageState extends State<HomePage>
                               .withOpacity(0.8),
                         ),
                         onPressed: () {
-                          openBottomSheet(itemBloc);
+                          openFeedPageBottomSheet(
+                              bloc: itemBloc,
+                              context: context,
+                              listArticlePages: listArticlePages);
                         }),
                     IconButton(
                         icon: Icon(
@@ -255,7 +141,7 @@ class _HomePageState extends State<HomePage>
           );
         }
         return AnimatedSwitcher(
-          duration: const Duration(milliseconds: 600),
+          duration: const Duration(milliseconds: 900),
           child: state.status == NewsStatus.initial ||
                   state.status == NewsStatus.loading
               ? LoadingContainer(

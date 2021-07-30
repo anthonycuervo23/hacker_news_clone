@@ -5,6 +5,9 @@ import 'package:hacker_news_clone/data/models/item.dart';
 
 part 'watched_items.g.dart';
 
+// typedef IntColumn = Column<int>;
+// typedef TextColumn = Column<String>;
+
 // this will generate a table called "watchedStories" for us. The rows of that table will
 // be represented by a class called "WatchedStories".
 class WatchedItems extends Table {

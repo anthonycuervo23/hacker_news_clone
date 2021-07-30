@@ -98,7 +98,7 @@ class InfoWithButtons extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            Container(
+            SizedBox(
               width: item!.descendants == 0
                   ? 50
                   : item!.descendants!.toDouble() > 99
@@ -173,7 +173,7 @@ class InfoWithButtons extends StatelessWidget {
             const SizedBox(
               width: 15,
             ),
-            Container(
+            SizedBox(
               width: 50,
               height: 40,
               child: TextButton(

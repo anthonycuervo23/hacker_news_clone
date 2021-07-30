@@ -122,7 +122,7 @@ class LoadingContainer extends StatelessWidget {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
                                 children: <Widget>[
-                                  Container(
+                                  SizedBox(
                                     width: 50,
                                     height: 40,
                                     child: TextButton(
@@ -152,7 +152,7 @@ class LoadingContainer extends StatelessWidget {
                                   const SizedBox(
                                     width: 15,
                                   ),
-                                  Container(
+                                  SizedBox(
                                     width: 50,
                                     height: 40,
                                     child: TextButton(
