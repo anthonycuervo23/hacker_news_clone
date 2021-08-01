@@ -1,21 +1,21 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'story.dart';
+part of 'item.dart';
 
 // **************************************************************************
 // BuiltValueGenerator
 // **************************************************************************
 
-Serializer<Story> _$storySerializer = new _$StorySerializer();
+Serializer<Item> _$itemSerializer = new _$ItemSerializer();
 
-class _$StorySerializer implements StructuredSerializer<Story> {
+class _$ItemSerializer implements StructuredSerializer<Item> {
   @override
-  final Iterable<Type> types = const [Story, _$Story];
+  final Iterable<Type> types = const [Item, _$Item];
   @override
-  final String wireName = 'Story';
+  final String wireName = 'Item';
 
   @override
-  Iterable<Object?> serialize(Serializers serializers, Story object,
+  Iterable<Object?> serialize(Serializers serializers, Item object,
       {FullType specifiedType = FullType.unspecified}) {
     final result = <Object?>[
       'id',
@@ -130,15 +130,15 @@ class _$StorySerializer implements StructuredSerializer<Story> {
         ..add('comments')
         ..add(serializers.serialize(value,
             specifiedType:
-                const FullType(BuiltList, const [const FullType(Story)])));
+                const FullType(List, const [const FullType.nullable(Item)])));
     }
     return result;
   }
 
   @override
-  Story deserialize(Serializers serializers, Iterable<Object?> serialized,
+  Item deserialize(Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = new StoryBuilder();
+    final result = new ItemBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
@@ -215,10 +215,9 @@ class _$StorySerializer implements StructuredSerializer<Story> {
               specifiedType: const FullType(bool)) as bool?;
           break;
         case 'comments':
-          result.comments.replace(serializers.deserialize(value,
-                  specifiedType:
-                      const FullType(BuiltList, const [const FullType(Story)]))!
-              as BuiltList<Object?>);
+          result.comments = serializers.deserialize(value,
+              specifiedType: const FullType(
+                  List, const [const FullType.nullable(Item)])) as List<Item?>?;
           break;
       }
     }
@@ -227,7 +226,7 @@ class _$StorySerializer implements StructuredSerializer<Story> {
   }
 }
 
-class _$Story extends Story {
+class _$Item extends Item {
   @override
   final int id;
   @override
@@ -261,12 +260,12 @@ class _$Story extends Story {
   @override
   final bool? seen;
   @override
-  final BuiltList<Story>? comments;
+  final List<Item?>? comments;
 
-  factory _$Story([void Function(StoryBuilder)? updates]) =>
-      (new StoryBuilder()..update(updates)).build();
+  factory _$Item([void Function(ItemBuilder)? updates]) =>
+      (new ItemBuilder()..update(updates)).build();
 
-  _$Story._(
+  _$Item._(
       {required this.id,
       this.deleted,
       this.type,
@@ -285,20 +284,20 @@ class _$Story extends Story {
       this.seen,
       this.comments})
       : super._() {
-    BuiltValueNullFieldError.checkNotNull(id, 'Story', 'id');
+    BuiltValueNullFieldError.checkNotNull(id, 'Item', 'id');
   }
 
   @override
-  Story rebuild(void Function(StoryBuilder) updates) =>
+  Item rebuild(void Function(ItemBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  StoryBuilder toBuilder() => new StoryBuilder()..replace(this);
+  ItemBuilder toBuilder() => new ItemBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is Story &&
+    return other is Item &&
         id == other.id &&
         deleted == other.deleted &&
         type == other.type &&
@@ -361,7 +360,7 @@ class _$Story extends Story {
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('Story')
+    return (newBuiltValueToStringHelper('Item')
           ..add('id', id)
           ..add('deleted', deleted)
           ..add('type', type)
@@ -383,8 +382,8 @@ class _$Story extends Story {
   }
 }
 
-class StoryBuilder implements Builder<Story, StoryBuilder> {
-  _$Story? _$v;
+class ItemBuilder implements Builder<Item, ItemBuilder> {
+  _$Item? _$v;
 
   int? _id;
   int? get id => _$this._id;
@@ -450,14 +449,15 @@ class StoryBuilder implements Builder<Story, StoryBuilder> {
   bool? get seen => _$this._seen;
   set seen(bool? seen) => _$this._seen = seen;
 
-  ListBuilder<Story>? _comments;
-  ListBuilder<Story> get comments =>
-      _$this._comments ??= new ListBuilder<Story>();
-  set comments(ListBuilder<Story>? comments) => _$this._comments = comments;
+  List<Item?>? _comments;
+  List<Item?>? get comments => _$this._comments;
+  set comments(List<Item?>? comments) => _$this._comments = comments;
 
-  StoryBuilder();
+  ItemBuilder() {
+    Item._setDefaults(this);
+  }
 
-  StoryBuilder get _$this {
+  ItemBuilder get _$this {
     final $v = _$v;
     if ($v != null) {
       _id = $v.id;
@@ -476,30 +476,30 @@ class StoryBuilder implements Builder<Story, StoryBuilder> {
       _parts = $v.parts?.toBuilder();
       _descendants = $v.descendants;
       _seen = $v.seen;
-      _comments = $v.comments?.toBuilder();
+      _comments = $v.comments;
       _$v = null;
     }
     return this;
   }
 
   @override
-  void replace(Story other) {
+  void replace(Item other) {
     ArgumentError.checkNotNull(other, 'other');
-    _$v = other as _$Story;
+    _$v = other as _$Item;
   }
 
   @override
-  void update(void Function(StoryBuilder)? updates) {
+  void update(void Function(ItemBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$Story build() {
-    _$Story _$result;
+  _$Item build() {
+    _$Item _$result;
     try {
       _$result = _$v ??
-          new _$Story._(
-              id: BuiltValueNullFieldError.checkNotNull(id, 'Story', 'id'),
+          new _$Item._(
+              id: BuiltValueNullFieldError.checkNotNull(id, 'Item', 'id'),
               deleted: deleted,
               type: type,
               by: by,
@@ -515,7 +515,7 @@ class StoryBuilder implements Builder<Story, StoryBuilder> {
               parts: _parts?.build(),
               descendants: descendants,
               seen: seen,
-              comments: _comments?.build());
+              comments: comments);
     } catch (_) {
       late String _$failedField;
       try {
@@ -524,12 +524,9 @@ class StoryBuilder implements Builder<Story, StoryBuilder> {
 
         _$failedField = 'parts';
         _parts?.build();
-
-        _$failedField = 'comments';
-        _comments?.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
-            'Story', _$failedField, e.toString());
+            'Item', _$failedField, e.toString());
       }
       rethrow;
     }

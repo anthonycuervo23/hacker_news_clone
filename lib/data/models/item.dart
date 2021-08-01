@@ -7,11 +7,11 @@ import 'package:timeago/timeago.dart' as timeago;
 //My imports
 import 'package:hacker_news_clone/data/models/serializers.dart';
 
-part 'story.g.dart';
+part 'item.g.dart';
 
-abstract class Story implements Built<Story, StoryBuilder> {
-  factory Story([void Function(StoryBuilder) updates]) = _$Story;
-  Story._();
+abstract class Item implements Built<Item, ItemBuilder> {
+  factory Item([void Function(ItemBuilder) updates]) = _$Item;
+  Item._();
 
   int get id;
 
@@ -57,20 +57,22 @@ abstract class Story implements Built<Story, StoryBuilder> {
   /// In the case of stories or polls, the total comment count.
   int? get descendants;
 
+  /// a bool to check if a story has been seen and change the ui
   bool? get seen;
 
-  BuiltList<Story>? get comments;
+  /// The list of comments inside a parent comment
+  List<Item?>? get comments;
 
   String get timeAgo {
     return timeago.format(DateTime.fromMillisecondsSinceEpoch(time! * 1000));
   }
 
-  static Story? fromJson(String jsonStr) {
+  static Item? fromJson(String jsonStr) {
     final dynamic parsed = json.decode(jsonStr);
-    return serializers.deserializeWith(Story.serializer, parsed);
+    return serializers.deserializeWith(Item.serializer, parsed);
   }
 
-  static List<int> parseStoriesId(String jsonString) {
+  static List<int> parseItemsId(String jsonString) {
     final dynamic parsed = jsonDecode(jsonString);
     if (parsed is Iterable && parsed != null) {
       final List<int> listOfIds = List<int>.from(parsed).take(10).toList();
@@ -80,5 +82,10 @@ abstract class Story implements Built<Story, StoryBuilder> {
     return <int>[];
   }
 
-  static Serializer<Story> get serializer => _$storySerializer;
+  static Serializer<Item> get serializer => _$itemSerializer;
+
+  @BuiltValueHook(initializeBuilder: true)
+  static void _setDefaults(ItemBuilder b) => b
+    ..comments = <Item?>[]
+    ..kids = ListBuilder<int>();
 }

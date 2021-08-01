@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hacker_news_clone/data/models/story.dart';
+import 'package:hacker_news_clone/data/models/item.dart';
 import 'package:hacker_news_clone/data/services/api_network.dart';
 import 'package:http/http.dart' as http;
 import 'package:mockito/annotations.dart';
@@ -23,8 +23,7 @@ void main() {
     const String url = 'https://hacker-news.firebaseio.com/v0/item/8863.json';
     when(client.get(Uri.parse(url)))
         .thenAnswer((_) async => http.Response(jsonString, 200));
-    expect(
-        await ApiNetworkHelper(http.Client()).getStory(8863), isA<Story>());
+    expect(await ApiNetworkHelper(http.Client()).getStory(8863), isA<Story>());
     expect(Story.fromJson(jsonString)!.by, 'dhouston');
     expect(Story.fromJson(jsonString)!.id, 8863);
   });
