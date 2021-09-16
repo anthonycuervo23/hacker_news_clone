@@ -99,7 +99,7 @@ class _SettingsPageState extends State<SettingsPage> {
               const SizedBox(
                 height: 10.0,
               ),
-              const Center(child: Text('LOGO')),
+              const Center(child: Text('LOGO GOES HERE')),
             ],
           ),
         ));

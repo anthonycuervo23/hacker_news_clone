@@ -28,6 +28,11 @@ class ItemBloc extends Bloc<ItemEvent, ItemState> {
             message: 'Could not get stories, please try again');
       } else {
         for (final Item? item in items) {
+          if (item == null) {
+            yield state.copyWith(
+                status: NewsStatus.error,
+                message: 'Could not get stories, please try again');
+          }
           if (item!.type == 'story') {
             filteredItems.add(item);
           }

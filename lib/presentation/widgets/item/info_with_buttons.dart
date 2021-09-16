@@ -6,14 +6,10 @@ import 'package:share/share.dart';
 import 'package:hacker_news_clone/data/models/item.dart';
 
 class InfoWithButtons extends StatelessWidget {
-  const InfoWithButtons(
-      {Key? key, this.item, this.counter, this.launchBrowser, this.isWatched})
-      : super(key: key);
+  const InfoWithButtons({Key? key, this.item, this.counter}) : super(key: key);
 
   final Item? item;
   final int? counter;
-  final Function(String)? launchBrowser;
-  final bool? isWatched;
 
   @override
   Widget build(BuildContext context) {
